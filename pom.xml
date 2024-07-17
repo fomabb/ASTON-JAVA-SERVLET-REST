@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.Nikolay.Kirilyuk</groupId>
     <artifactId>Home-work-servlet</artifactId>
@@ -13,12 +14,12 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -44,8 +45,9 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>10.11.0</version>
+            <version>10.15.2</version>
         </dependency>
+
     </dependencies>
     <build>
         <finalName>Home-work-org.iase24.nikolay.kirilyuk.servlet</finalName>
@@ -67,6 +69,12 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>10.15.2</version>
             </plugin>
         </plugins>
     </build>

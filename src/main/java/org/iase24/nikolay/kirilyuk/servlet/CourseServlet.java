@@ -42,4 +42,27 @@ public class CourseServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_ACCEPTED);
         responseUtil.httpResponse(resp, course);
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idParam = req.getParameter("id");
+        Long id = Long.parseLong(idParam);
+        courseDao.deleteCourse(id);
+
+        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        responseUtil.httpResponse(resp, courseDao.getAllCourse());
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idParam = req.getParameter("id");
+        Long id = Long.parseLong(idParam);
+        BufferedReader reader = req.getReader();
+        Gson gson = new Gson();
+        Course course = gson.fromJson(reader, Course.class);
+
+        courseDao.updateCourse(course, id);
+        resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+        responseUtil.httpResponse(resp, course);
+    }
 }

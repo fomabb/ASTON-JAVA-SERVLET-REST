@@ -8,4 +8,6 @@ public interface CourseDao {
 
     List<Course> getAllCourse();
     void addCourse(Course course);
+    void deleteCourse(Long id);
+    void updateCourse(Course course, Long id);
 }

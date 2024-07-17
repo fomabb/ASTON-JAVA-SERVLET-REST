@@ -78,7 +78,6 @@ public class TeacherDaoImpl implements TeacherDao {
                 Long teacherId = resultSet.getLong("id");
                 String name = resultSet.getString("name");
                 StatusUser status = StatusUser.valueOf(resultSet.getString("status"));
-                String course = resultSet.getString("course");
 
                 List<Student> students = getStudentByTeacherId(teacherId);
 
@@ -103,8 +102,6 @@ public class TeacherDaoImpl implements TeacherDao {
                 Long studentId = resultSet.getLong("id");
                 String name = resultSet.getString("name");
                 StatusUser status = StatusUser.valueOf(resultSet.getString("status"));
-                String teacherName = resultSet.getString("teacher");
-                String course = resultSet.getString("course");
                 students.add(new Student(studentId, name, status, null, null));
             }
         } catch (SQLException e) {

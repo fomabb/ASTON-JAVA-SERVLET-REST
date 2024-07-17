@@ -21,7 +21,7 @@ public class StudentDaoImpl implements StudentDao {
     private static final String GET_COURSE_BY_ID =
             "SELECT c.id, c.name FROM course c " +
                     "INNER JOIN students_courses sc ON c.id = sc.course_id " +
-                    "WHERE sc.student_id = ? and c.teacher_id=id";
+                    "WHERE sc.student_id = ?";
 
     @Override
     public List<Student> getAllStudent() {
