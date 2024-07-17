@@ -3,6 +3,7 @@ package org.iase24.nikolay.kirilyuk.dao.impl;
 import org.iase24.nikolay.kirilyuk.dao.TeacherDao;
 import org.iase24.nikolay.kirilyuk.entity.Teacher;
 import org.iase24.nikolay.kirilyuk.util.DataBaseConnection;
+import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 public class TeacherDaoImpl implements TeacherDao {
 
     private static final String GET_ALL_TEACHERS = "SELECT * FROM teachers";
-    private static final String ADD_NEW_TEACHER = "INSERT INTO teachers (name) values (?)";
+    private static final String ADD_NEW_TEACHER = "INSERT INTO teachers (name, status) values (?, ?)";
 
     @Override
     public List<Teacher> getAllTeachers() {
@@ -25,6 +26,7 @@ public class TeacherDaoImpl implements TeacherDao {
                 Teacher teacher = new Teacher();
                 teacher.setId(resultSet.getLong("id"));
                 teacher.setName(resultSet.getString("name"));
+                teacher.setStatus(StatusUser.valueOf(resultSet.getString("status")));
                 teachers.add(teacher);
             }
 
@@ -43,6 +45,8 @@ public class TeacherDaoImpl implements TeacherDao {
                         ADD_NEW_TEACHER, Statement.RETURN_GENERATED_KEYS)
         ) {
             statement.setString(1, teacher.getName());
+            teacher.setStatus(StatusUser.TEACHER);
+            statement.setString(2, teacher.getStatus().toString());
             statement.executeUpdate();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {

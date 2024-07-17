@@ -4,4 +4,8 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+<!--  <listener>-->
+<!--    <listener-class>org.iase24.nikolay.kirilyuk.listener.ApplicationContextListener</listener-class>-->
+<!--  </listener>-->
 </web-app>

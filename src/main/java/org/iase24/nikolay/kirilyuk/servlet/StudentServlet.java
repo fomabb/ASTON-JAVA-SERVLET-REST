@@ -28,8 +28,25 @@ public class StudentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Student> students = studentDao.getAllStudent();
-        responseUtil.httpResponse(resp, students);
+        String idParam = req.getParameter("id");
+        if (idParam != null) {
+            try {
+                Long id = Long.parseLong(idParam);
+                Student student = studentDao.getStudentById(id);
+                if (student != null) {
+                    responseUtil.httpResponse(resp, student);
+                } else {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    responseUtil.httpResponse(resp, "Student not found with ID: " + id);
+                }
+            } catch (NumberFormatException e) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                responseUtil.httpResponse(resp, "Invalid ID format");
+            }
+        } else {
+            List<Student> students = studentDao.getAllStudent();
+            responseUtil.httpResponse(resp, students);
+        }
     }
 
     @Override
