@@ -10,8 +10,8 @@ import java.util.List;
 
 public class CourseDaoImpl implements CourseDao {
 
-    private static final String GET_ALL_COURSES = "SELECT * FROM courses";
-    private static final String ADD_NEW_COURSE = "INSERT INTO courses (name) VALUES (?)";
+    private static final String GET_ALL_COURSES = "SELECT * FROM course";
+    private static final String ADD_NEW_COURSE = "INSERT INTO course (name) VALUES (?)";
 
     @Override
     public List<Course> getAllCourse() {

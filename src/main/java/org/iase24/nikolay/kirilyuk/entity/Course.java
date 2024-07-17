@@ -14,5 +14,5 @@ public class Course {
     private Long id;
     private String name;
     private List<Student> students;
-//    private Teacher teacher;
+    private Teacher teacher;
 }

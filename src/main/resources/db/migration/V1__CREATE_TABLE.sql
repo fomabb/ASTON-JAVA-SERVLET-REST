@@ -1,27 +1,32 @@
-create table teachers
+CREATE TABLE IF NOT EXISTS Teacher
 (
-    id     bigserial primary key,
-    name   varchar(255) not null,
-    status character varying(10)
+    id     SERIAL PRIMARY KEY,
+    name   VARCHAR(255) NOT NULL,
+    status VARCHAR(50)  NOT NULL
 );
 
-create table courses
+CREATE TABLE IF NOT EXISTS Student
 (
-    id         bigserial primary key,
-    name       varchar(255) not null,
-    teacher_id integer references teachers (id)
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    status     VARCHAR(50)  NOT NULL,
+    teacher_id BIGINT,
+    FOREIGN KEY (teacher_id) REFERENCES Teacher (id)
 );
 
-create table students
+CREATE TABLE IF NOT EXISTS Course
 (
-    id   bigserial primary key,
-    name varchar(255) not null,
-    status character varying(10)
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    teacher_id BIGINT,
+    FOREIGN KEY (teacher_id) REFERENCES Teacher (id)
 );
 
-create table students_courses
+CREATE TABLE IF NOT EXISTS students_courses
 (
-    student_id integer references students (id),
-    courses_id integer references courses (id),
-    primary key (student_id, courses_id)
+    student_id BIGINT NOT NULL,
+    course_id  BIGINT NOT NULL,
+    PRIMARY KEY (student_id, course_id),
+    FOREIGN KEY (student_id) REFERENCES Student (id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES Course (id) ON DELETE CASCADE
 );

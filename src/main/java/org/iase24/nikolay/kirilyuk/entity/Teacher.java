@@ -14,7 +14,7 @@ public class Teacher {
 
     private Long id;
     private String name;
-    private List<Student> students;
-    private Course course;
     private StatusUser status;
+    private Course course;
+    private List<Student> students;
 }
