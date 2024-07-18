@@ -1,7 +1,7 @@
 package org.iase24.nikolay.kirilyuk.dao.impl;
 
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
-import org.iase24.nikolay.kirilyuk.entity.Course;
+import org.iase24.nikolay.kirilyuk.model.Course;
 import org.iase24.nikolay.kirilyuk.util.DataBaseConnection;
 
 import java.sql.*;
@@ -14,6 +14,7 @@ public class CourseDaoImpl implements CourseDao {
     private static final String ADD_NEW_COURSE = "INSERT INTO course (name) VALUES (?)";
     private static final String DELETE_COURSE = "DELETE FROM course WHERE id = ?";
     private static final String UPDATE_COURSE = "UPDATE course SET name = ? WHERE id = ?";
+    private static final String ADD_TEACHER_IN_COURSE = "update course set teacher_id = ? where id = ?";
 
     @Override
     public List<Course> getAllCourse() {
@@ -86,6 +87,20 @@ public class CourseDaoImpl implements CourseDao {
             } else {
                 throw new SQLException("Updating course failed, no ID obtained.");
             }
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addTeacherInCourse(Long courseId, Integer teacherId) {
+        try (
+                Connection connection = DataBaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(ADD_TEACHER_IN_COURSE)
+        ) {
+            statement.setLong(1, courseId);
+            statement.setLong(2, teacherId);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

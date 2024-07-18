@@ -3,7 +3,7 @@ package org.iase24.nikolay.kirilyuk.servlet;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.CourseDaoImpl;
-import org.iase24.nikolay.kirilyuk.entity.Course;
+import org.iase24.nikolay.kirilyuk.model.Course;
 import org.iase24.nikolay.kirilyuk.util.HttpResponseUtil;
 
 import javax.servlet.ServletException;
@@ -21,7 +21,7 @@ public class CourseServlet extends HttpServlet {
     private final CourseDao courseDao;
     private final HttpResponseUtil responseUtil;
 
-    public  CourseServlet() {
+    public CourseServlet() {
         this.courseDao = new CourseDaoImpl();
         this.responseUtil = new HttpResponseUtil();
     }
@@ -56,13 +56,19 @@ public class CourseServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idParam = req.getParameter("id");
-        Long id = Long.parseLong(idParam);
-        BufferedReader reader = req.getReader();
-        Gson gson = new Gson();
-        Course course = gson.fromJson(reader, Course.class);
+        Long courseId = Long.parseLong(req.getParameter("courseId"));
+        int teacherId = Integer.parseInt(req.getParameter("teacherId"));
+        if (idParam != null) {
+            Long id = Long.parseLong(idParam);
+            BufferedReader reader = req.getReader();
+            Gson gson = new Gson();
+            Course course = gson.fromJson(reader, Course.class);
 
-        courseDao.updateCourse(course, id);
-        resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-        responseUtil.httpResponse(resp, course);
+            courseDao.updateCourse(course, id);
+            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+            responseUtil.httpResponse(resp, course);
+        } else {
+            courseDao.addTeacherInCourse(courseId, teacherId);
+        }
     }
 }

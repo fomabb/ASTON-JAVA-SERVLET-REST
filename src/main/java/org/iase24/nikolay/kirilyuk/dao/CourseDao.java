@@ -1,6 +1,6 @@
 package org.iase24.nikolay.kirilyuk.dao;
 
-import org.iase24.nikolay.kirilyuk.entity.Course;
+import org.iase24.nikolay.kirilyuk.model.Course;
 
 import java.util.List;
 
@@ -10,4 +10,5 @@ public interface CourseDao {
     void addCourse(Course course);
     void deleteCourse(Long id);
     void updateCourse(Course course, Long id);
+    void addTeacherInCourse(Long courseId, Integer teacherId);
 }

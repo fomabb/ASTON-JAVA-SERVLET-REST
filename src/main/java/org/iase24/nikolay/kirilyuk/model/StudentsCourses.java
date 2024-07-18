@@ -1,4 +1,4 @@
-package org.iase24.nikolay.kirilyuk.entity;
+package org.iase24.nikolay.kirilyuk.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentsCourses {
-    private Integer student_id;
-    private Integer courses_id;
+    private int student_id;
+    private int courses_id;
 }

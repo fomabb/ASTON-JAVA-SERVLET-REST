@@ -1,4 +1,4 @@
-package org.iase24.nikolay.kirilyuk.entity;
+package org.iase24.nikolay.kirilyuk.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

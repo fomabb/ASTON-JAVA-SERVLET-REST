@@ -3,7 +3,7 @@ package org.iase24.nikolay.kirilyuk.servlet;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.StudentDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.StudentDaoImpl;
-import org.iase24.nikolay.kirilyuk.entity.Student;
+import org.iase24.nikolay.kirilyuk.model.Student;
 import org.iase24.nikolay.kirilyuk.util.HttpResponseUtil;
 
 import javax.servlet.ServletException;

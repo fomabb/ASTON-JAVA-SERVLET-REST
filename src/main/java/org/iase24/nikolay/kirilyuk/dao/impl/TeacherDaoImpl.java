@@ -1,8 +1,8 @@
 package org.iase24.nikolay.kirilyuk.dao.impl;
 
 import org.iase24.nikolay.kirilyuk.dao.TeacherDao;
-import org.iase24.nikolay.kirilyuk.entity.Student;
-import org.iase24.nikolay.kirilyuk.entity.Teacher;
+import org.iase24.nikolay.kirilyuk.model.Student;
+import org.iase24.nikolay.kirilyuk.model.Teacher;
 import org.iase24.nikolay.kirilyuk.util.DataBaseConnection;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 

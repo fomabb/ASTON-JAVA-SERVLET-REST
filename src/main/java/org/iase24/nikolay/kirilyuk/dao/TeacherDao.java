@@ -1,7 +1,6 @@
 package org.iase24.nikolay.kirilyuk.dao;
 
-import org.iase24.nikolay.kirilyuk.entity.Student;
-import org.iase24.nikolay.kirilyuk.entity.Teacher;
+import org.iase24.nikolay.kirilyuk.model.Teacher;
 
 import java.util.List;
 
