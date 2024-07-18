@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/students")
+@WebServlet("/api/students")
 public class StudentServlet extends HttpServlet {
 
     private final StudentDao studentDao;
@@ -58,5 +58,12 @@ public class StudentServlet extends HttpServlet {
         studentDao.addStudent(student);
         resp.setStatus(HttpServletResponse.SC_ACCEPTED);
         responseUtil.httpResponse(resp, student);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        String idParam = req.getParameter("id");
+        Long id = Long.parseLong(idParam);
+        studentDao.deleteStudent(id);
     }
 }

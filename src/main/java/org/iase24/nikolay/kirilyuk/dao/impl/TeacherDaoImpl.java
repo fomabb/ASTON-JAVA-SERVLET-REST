@@ -15,9 +15,9 @@ public class TeacherDaoImpl implements TeacherDao {
     private static final String GET_ALL_TEACHERS = "SELECT * FROM teacher";
     private static final String ADD_NEW_TEACHER = "INSERT INTO teacher (name, status) values (?, ?)";
     private static final String GET_TEACHER_BY_ID = "SELECT * FROM teacher WHERE id = ?";
+    private static final String DELETE_TEACHER_BY_ID = "DELETE FROM teacher WHERE id = ?";
     private static final String GET_STUDENT_BY_TEACHER_ID =
-            "SELECT * FROM student s " +
-                    "INNER JOIN teacher t ON s.id = teacher_id";
+            "SELECT * FROM student s INNER JOIN teacher t ON s.teacher_id = t.id where t.id = ?";
 
     @Override
     public List<Teacher> getAllTeachers() {
@@ -87,6 +87,23 @@ public class TeacherDaoImpl implements TeacherDao {
             e.printStackTrace();
         }
         return teacher;
+    }
+
+    @Override
+    public void deleteTeacherById(Long id) {
+        try (
+                Connection connection = DataBaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(DELETE_TEACHER_BY_ID)
+        ) {
+            if (id != null) {
+                statement.setLong(1, id);
+            } else {
+                throw new SQLException("Deleting teacher failed, no ID obtained.");
+            }
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<Student> getStudentByTeacherId(Long teacherId) {

@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/courses")
+@WebServlet("/api/courses")
 public class CourseServlet extends HttpServlet {
 
     private final CourseDao courseDao;
@@ -28,8 +28,25 @@ public class CourseServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Course> courses = courseDao.getAllCourse();
-        responseUtil.httpResponse(resp, courses);
+        String idParam = req.getParameter("id");
+        if (idParam != null) {
+            try {
+                Long id = Long.parseLong(idParam);
+                Course course = courseDao.getCourseById(id);
+                if (course != null) {
+                    responseUtil.httpResponse(resp, course);
+                } else {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    responseUtil.httpResponse(resp, "Course not found with ID: " + id);
+                }
+            } catch (NullPointerException e) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                responseUtil.httpResponse(resp, "Invalid ID format");
+            }
+        } else {
+            List<Course> courses = courseDao.getAllCourse();
+            responseUtil.httpResponse(resp, courses);
+        }
     }
 
     @Override

@@ -32,9 +32,9 @@ public class StudentsCoursesImpl implements StudentsCoursesDao {
                 Connection connection = DataBaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(DELETE_STUDENT_IN_COURSE)
         ) {
-             statement.setInt(1, studentId);
-             statement.setInt(2, courseId);
-             statement.executeUpdate();
+            statement.setInt(1, studentId);
+            statement.setInt(2, courseId);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

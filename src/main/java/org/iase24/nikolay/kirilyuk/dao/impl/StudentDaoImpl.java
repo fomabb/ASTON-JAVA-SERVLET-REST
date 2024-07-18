@@ -3,6 +3,7 @@ package org.iase24.nikolay.kirilyuk.dao.impl;
 import org.iase24.nikolay.kirilyuk.dao.StudentDao;
 import org.iase24.nikolay.kirilyuk.model.Course;
 import org.iase24.nikolay.kirilyuk.model.Student;
+import org.iase24.nikolay.kirilyuk.model.Teacher;
 import org.iase24.nikolay.kirilyuk.util.DataBaseConnection;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
@@ -14,13 +15,15 @@ public class StudentDaoImpl implements StudentDao {
 
     private static final String GET_ALL_USER = "SELECT * FROM student";
     private static final String ADD_NEW_STUDENT = "INSERT INTO student (name, status) values (?, ?)";
-    private static final String UPDATE_STUDENT = "UPDATE students SET name = ? WHERE id = ?";
-    private static final String DELETE_STUDENT = "DELETE FROM students WHERE id = ?";
+    private static final String DELETE_STUDENT_BY_ID = "DELETE FROM student WHERE id = ?";
     private static final String GET_STUDENT_BY_ID = "SELECT * FROM student WHERE id = ?";
     private static final String GET_COURSE_BY_ID =
             "SELECT c.id, c.name FROM course c " +
                     "INNER JOIN students_courses sc ON c.id = sc.course_id " +
                     "WHERE sc.student_id = ?";
+    private static final String GET_TEACHER_BY_STUDENT_ID =
+            "SELECT t.id, t.name, t.status FROM teacher t " +
+                    "JOIN student s on t.id = s.teacher_id";
 
     @Override
     public List<Student> getAllStudent() {
@@ -69,13 +72,20 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void updateStudent(Student student) {
-
-    }
-
-    @Override
-    public void deleteStudent(Student student) {
-
+    public void deleteStudent(Long id) {
+        try (
+                Connection connection = DataBaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(DELETE_STUDENT_BY_ID)
+        ) {
+            if (id != null) {
+                statement.setLong(1, id);
+            } else {
+                throw new SQLException("Deleting student failed, no ID obtained.");
+            }
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -83,7 +93,7 @@ public class StudentDaoImpl implements StudentDao {
         Student student = null;
         try (
                 Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_STUDENT_BY_ID);
+                PreparedStatement statement = connection.prepareStatement(GET_STUDENT_BY_ID)
         ) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -93,8 +103,9 @@ public class StudentDaoImpl implements StudentDao {
                 StatusUser status = StatusUser.valueOf(resultSet.getString("status"));
 
                 List<Course> courses = getCoursesByStudentId(studentId);
+                Teacher teacher = getTeacherByStudentId(studentId);
 
-                student = new Student(studentId, name, status, null, courses);
+                student = new Student(studentId, name, status, teacher, courses);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,10 +113,12 @@ public class StudentDaoImpl implements StudentDao {
         return student;
     }
 
+
     private List<Course> getCoursesByStudentId(Long studentId) {
         List<Course> courses = new ArrayList<>();
 
         try (PreparedStatement statement = DataBaseConnection.getConnection().prepareStatement(GET_COURSE_BY_ID)) {
+
             statement.setLong(1, studentId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -118,5 +131,28 @@ public class StudentDaoImpl implements StudentDao {
             e.printStackTrace();
         }
         return courses;
+    }
+
+    private Teacher getTeacherByStudentId(Long studentId) {
+        Teacher teacher = null;
+
+        try (
+                Connection connection = DataBaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(GET_TEACHER_BY_STUDENT_ID)
+        ) {
+            statement.setLong(1, studentId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Long teacherId = resultSet.getLong("id");
+                String name = resultSet.getString("name");
+                StatusUser status = StatusUser.valueOf(resultSet.getString("status"));
+
+                teacher = new Teacher(teacherId, name, status, null, null);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return teacher;
     }
 }
