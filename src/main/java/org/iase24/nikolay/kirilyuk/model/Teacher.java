@@ -1,18 +1,20 @@
-package org.iase24.nikolay.kirilyuk.entity;
+package org.iase24.nikolay.kirilyuk.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Course {
+@AllArgsConstructor
+public class Teacher {
 
     private Long id;
     private String name;
+    private StatusUser status;
+    private Course course;
     private List<Student> students;
-    private Teacher teacher;
 }

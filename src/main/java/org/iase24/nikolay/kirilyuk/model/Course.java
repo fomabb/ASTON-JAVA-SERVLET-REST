@@ -1,4 +1,4 @@
-package org.iase24.nikolay.kirilyuk.entity;
+package org.iase24.nikolay.kirilyuk.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Teacher {
+@NoArgsConstructor
+public class Course {
 
     private Long id;
     private String name;
     private List<Student> students;
-    private Course course;
+    private Teacher teacher;
 }
