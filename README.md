@@ -328,5 +328,5 @@ ___GET: get all students___
 
 ### My application requests in Postman
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21948648/2sA3JFCk5E)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21948648/2sA3kSni9f)
   
