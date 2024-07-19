@@ -1,9 +1,10 @@
 package org.iase24.nikolay.kirilyuk.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.CourseDaoImpl;
-import org.iase24.nikolay.kirilyuk.model.Course;
+import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.util.HttpResponseUtil;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ public class CourseServlet extends HttpServlet {
 
     private final CourseDao courseDao;
     private final HttpResponseUtil responseUtil;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public CourseServlet() {
         this.courseDao = new CourseDaoImpl();
@@ -54,9 +56,7 @@ public class CourseServlet extends HttpServlet {
         BufferedReader reader = req.getReader();
         Gson gson = new Gson();
         Course course = gson.fromJson(reader, Course.class);
-
         courseDao.addCourse(course);
-        resp.setStatus(HttpServletResponse.SC_ACCEPTED);
         responseUtil.httpResponse(resp, course);
     }
 

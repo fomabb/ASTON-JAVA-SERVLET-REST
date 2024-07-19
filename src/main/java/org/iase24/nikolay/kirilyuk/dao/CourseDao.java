@@ -1,6 +1,6 @@
 package org.iase24.nikolay.kirilyuk.dao;
 
-import org.iase24.nikolay.kirilyuk.model.Course;
+import org.iase24.nikolay.kirilyuk.entity.Course;
 
 import java.util.List;
 
