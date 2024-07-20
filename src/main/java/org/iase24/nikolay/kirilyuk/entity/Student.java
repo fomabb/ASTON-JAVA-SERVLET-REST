@@ -1,11 +1,11 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -31,11 +31,14 @@ public class Student {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToMany
-    @JoinTable(
-            name = "students_courses",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private List<Course> courses;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "students_courses",
+//            joinColumns = @JoinColumn(name = "student_id"),
+//            inverseJoinColumns = @JoinColumn(name = "course_id")
+//    )
+//    private List<Course> courses;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<StudentsCourses> studentsCourses;
 }

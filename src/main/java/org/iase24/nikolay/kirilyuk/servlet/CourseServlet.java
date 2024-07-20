@@ -1,6 +1,5 @@
 package org.iase24.nikolay.kirilyuk.servlet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.CourseDaoImpl;
@@ -18,10 +17,9 @@ import java.util.List;
 
 @WebServlet("/api/courses")
 public class CourseServlet extends HttpServlet {
-
+    private static final long serialVersionUID = 1L;
     private final CourseDao courseDao;
     private final HttpResponseUtil responseUtil;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     public CourseServlet() {
         this.courseDao = new CourseDaoImpl();

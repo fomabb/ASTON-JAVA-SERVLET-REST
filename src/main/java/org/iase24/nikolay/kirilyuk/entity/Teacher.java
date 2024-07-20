@@ -1,11 +1,11 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity

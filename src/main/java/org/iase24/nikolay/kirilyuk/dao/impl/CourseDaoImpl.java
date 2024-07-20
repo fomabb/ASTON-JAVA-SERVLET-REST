@@ -1,6 +1,7 @@
 package org.iase24.nikolay.kirilyuk.dao.impl;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.util.HibernateUtil;
@@ -9,35 +10,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseDaoImpl implements CourseDao {
+
     @Override
+    @SuppressWarnings("uncheked")
     public List<Course> getAllCourse() {
-        List<Course> courses = new ArrayList<Course>();
+        List<Course> courses = new ArrayList<>();
+        Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
-           courses = session.createQuery("from Course").list();
-            session.getTransaction().commit();
-            return courses;
+            transaction = session.beginTransaction();
+            courses = session.createQuery("from Course").list();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
         }
-        return null;
+        return courses;
     }
 
     @Override
     public Course getCourseById(Long id) {
-        return null;
+        Transaction transaction = null;
+        Course courses = new Course();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            courses = session.get(Course.class, id);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return courses;
     }
 
     @Override
     public void addCourse(Course course) {
+        Transaction transaction = null;
         try (
                 Session session = HibernateUtil.getSessionFactory().openSession()
         ) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(course);
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 

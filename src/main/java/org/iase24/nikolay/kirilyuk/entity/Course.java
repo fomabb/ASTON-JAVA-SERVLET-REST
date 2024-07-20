@@ -1,10 +1,10 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -22,8 +22,12 @@ public class Course {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "course")
-    private List<Student> students;
+//    @ManyToMany(mappedBy = "course")
+//    private List<Student> students;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<StudentsCourses> studentsCourses;
+
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Teacher> teachers;
