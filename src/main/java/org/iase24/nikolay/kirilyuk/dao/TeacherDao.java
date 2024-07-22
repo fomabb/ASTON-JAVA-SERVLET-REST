@@ -1,16 +1,17 @@
-//package org.iase24.nikolay.kirilyuk.dao;
-//
-//import org.iase24.nikolay.kirilyuk.entity.Teacher;
-//
-//import java.util.List;
-//
-//public interface TeacherDao {
-//
-//    List<Teacher> getAllTeachers();
-//
-//    void addTeacher(Teacher teacher);
-//
-//    Teacher getTeacherById(Long id);
-//
-//    void deleteTeacherById(Long id);
-//}
+package org.iase24.nikolay.kirilyuk.dao;
+
+import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Teacher;
+
+import java.util.List;
+
+public interface TeacherDao {
+
+    List<TeacherDataDTO> getAllTeachers();
+
+    void addTeacher(Teacher teacher);
+
+    Teacher getTeacherById(Long id);
+
+    void deleteTeacherById(Long id);
+}

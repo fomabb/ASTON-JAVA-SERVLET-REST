@@ -1,5 +1,8 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +19,7 @@ import java.util.List;
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -29,16 +32,10 @@ public class Student {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
+    @JsonBackReference("student-teacher")
     private Teacher teacher;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "students_courses",
-//            joinColumns = @JoinColumn(name = "student_id"),
-//            inverseJoinColumns = @JoinColumn(name = "course_id")
-//    )
-//    private List<Course> courses;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<StudentsCourses> studentsCourses;
 }

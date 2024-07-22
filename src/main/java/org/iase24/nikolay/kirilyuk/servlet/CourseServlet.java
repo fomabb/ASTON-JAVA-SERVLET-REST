@@ -3,6 +3,7 @@ package org.iase24.nikolay.kirilyuk.servlet;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.CourseDaoImpl;
+import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.util.HttpResponseUtil;
 
@@ -44,7 +45,7 @@ public class CourseServlet extends HttpServlet {
                 responseUtil.httpResponse(resp, "Invalid ID format");
             }
         } else {
-            List<Course> courses = courseDao.getAllCourse();
+            List<CourseDataDTO> courses = courseDao.getAllCourse();
             responseUtil.httpResponse(resp, courses);
         }
     }

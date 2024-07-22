@@ -1,12 +1,13 @@
 package org.iase24.nikolay.kirilyuk.dao;
 
+import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 
 import java.util.List;
 
 public interface CourseDao {
 
-    List<Course> getAllCourse();
+    List<CourseDataDTO> getAllCourse();
 
     Course getCourseById(Long id);
 
