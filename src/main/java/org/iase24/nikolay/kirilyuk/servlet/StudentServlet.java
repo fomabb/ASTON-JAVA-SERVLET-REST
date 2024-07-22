@@ -52,13 +52,33 @@ public class StudentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BufferedReader reader = req.getReader();
-        Gson gson = new Gson();
-        Student student = gson.fromJson(reader, Student.class);
+        String studentIdParam = req.getParameter("studentId");
+        String courseIdParam = req.getParameter("courseId");
 
-        studentDao.addStudent(student);
-        resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-        responseUtil.httpResponse(resp, student);
+        if (studentIdParam != null && courseIdParam != null) {
+            try {
+                Long studentId = Long.parseLong(studentIdParam);
+                Long courseId = Long.parseLong(courseIdParam);
+
+                studentDao.addStudentToCourse(studentId, courseId);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid studentId or courseId format.");
+            }
+        } else {
+            try (BufferedReader reader = req.getReader()) {
+                Gson gson = new Gson();
+                Student student = gson.fromJson(reader, Student.class);
+
+                studentDao.addStudent(student);
+                resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+                responseUtil.httpResponse(resp, student);
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid student data.");
+            }
+        }
     }
 
     @Override

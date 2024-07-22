@@ -52,11 +52,27 @@ public class CourseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BufferedReader reader = req.getReader();
-        Gson gson = new Gson();
-        Course course = gson.fromJson(reader, Course.class);
-        courseDao.addCourse(course);
-        responseUtil.httpResponse(resp, course);
+        String courseIdParam = req.getParameter("courseId");
+        String teacherIdParam = req.getParameter("teacherId");
+
+        if (courseIdParam != null && teacherIdParam != null) {
+            try {
+                Long courseId = Long.parseLong(courseIdParam);
+                Long studentId = Long.parseLong(teacherIdParam);
+
+                courseDao.addTeacherToCourse(studentId, courseId);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid studentId or courseId format.");
+            }
+        } else {
+            BufferedReader reader = req.getReader();
+            Gson gson = new Gson();
+            Course course = gson.fromJson(reader, Course.class);
+            courseDao.addCourse(course);
+            responseUtil.httpResponse(resp, course);
+        }
     }
 
     @Override
@@ -73,7 +89,7 @@ public class CourseServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idParam = req.getParameter("id");
         Long courseId = Long.parseLong(req.getParameter("courseId"));
-        int teacherId = Integer.parseInt(req.getParameter("teacherId"));
+        Long teacherId = Long.parseLong(req.getParameter("teacherId"));
         if (idParam != null) {
             Long id = Long.parseLong(idParam);
             BufferedReader reader = req.getReader();
@@ -84,7 +100,7 @@ public class CourseServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_ACCEPTED);
             responseUtil.httpResponse(resp, course);
         } else {
-            courseDao.addTeacherInCourse(courseId, teacherId);
+            courseDao.addTeacherToCourse(courseId, teacherId);
         }
     }
 }

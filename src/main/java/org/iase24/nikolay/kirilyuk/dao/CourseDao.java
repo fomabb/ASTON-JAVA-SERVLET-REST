@@ -17,5 +17,5 @@ public interface CourseDao {
 
     void updateCourse(Course course, Long id);
 
-    void addTeacherInCourse(Long courseId, Integer teacherId);
+    void addTeacherToCourse(Long courseId, Long teacherId);
 }
