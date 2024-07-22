@@ -1,10 +1,10 @@
 package org.iase24.nikolay.kirilyuk.dao.impl;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.iase24.nikolay.kirilyuk.dao.StudentDao;
 import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.entity.Student;
 import org.iase24.nikolay.kirilyuk.util.HibernateUtil;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
@@ -73,10 +73,11 @@ public class StudentDaoImpl implements StudentDao {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            student = session.get(Student.class, id);
-            if (student != null) {
-                Hibernate.initialize(student.getStudentsCourses());
-            }
+            student = session.createQuery(
+                            "SELECT s FROM Student s LEFT JOIN FETCH s.courses WHERE s.id = :id"
+                            , Student.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -85,5 +86,30 @@ public class StudentDaoImpl implements StudentDao {
             e.printStackTrace();
         }
         return student;
+    }
+
+    @Override
+    public void addStudentToCourse(Long studentId, Long courseId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Student student = session.get(Student.class, studentId);
+            Course course = session.get(Course.class, courseId);
+
+            if (student != null && course != null) {
+                student.getCourses().add(course);
+                course.getStudents().add(student);
+
+                session.saveOrUpdate(student);
+                session.saveOrUpdate(course);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 }

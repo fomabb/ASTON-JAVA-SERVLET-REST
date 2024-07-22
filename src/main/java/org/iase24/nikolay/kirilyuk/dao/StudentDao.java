@@ -14,4 +14,6 @@ public interface StudentDao {
     void deleteStudent(Long id);
 
     Student getStudentById(Long id);
+
+    void addStudentToCourse(Long studentId, Long courseId);
 }

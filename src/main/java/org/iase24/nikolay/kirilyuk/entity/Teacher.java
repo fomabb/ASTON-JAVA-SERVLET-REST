@@ -5,22 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "teacher")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Teacher {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class Teacher extends BaseEntity {
 
     @Column(name = "name")
     private String name;
@@ -30,7 +27,7 @@ public class Teacher {
     private StatusUser status;
 
     @JsonBackReference("teacher-student")
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Student> students;
 
     @JsonIgnore
