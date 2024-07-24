@@ -1,12 +1,13 @@
 package org.iase24.nikolay.kirilyuk.dao;
 
-import org.iase24.nikolay.kirilyuk.model.Teacher;
+import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Teacher;
 
 import java.util.List;
 
 public interface TeacherDao {
 
-    List<Teacher> getAllTeachers();
+    List<TeacherDataDTO> getAllTeachers();
 
     void addTeacher(Teacher teacher);
 

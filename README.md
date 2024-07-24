@@ -1,9 +1,9 @@
-# ASTON-JAVA-SERVLET-REST
+# ASTON-HIBERNATE-SERVLET-REST
 
 # RESTful Web-application is written using the following technologies:
 
 - Servlet API
-- JDBC
+- Hibernate
 - FlyWay
 - PostgresSQL DB
 

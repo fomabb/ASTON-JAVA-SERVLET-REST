@@ -1,16 +1,19 @@
 package org.iase24.nikolay.kirilyuk.dao;
 
-import org.iase24.nikolay.kirilyuk.model.Student;
+import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Student;
 
 import java.util.List;
 
 public interface StudentDao {
 
-    List<Student> getAllStudent();
+    List<StudentDataDTO> getAllStudent();
 
     void addStudent(Student student);
 
     void deleteStudent(Long id);
 
     Student getStudentById(Long id);
+
+    void addStudentToCourse(Long studentId, Long courseId);
 }

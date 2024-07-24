@@ -1,188 +1,136 @@
 package org.iase24.nikolay.kirilyuk.dao.impl;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
-import org.iase24.nikolay.kirilyuk.model.Course;
-import org.iase24.nikolay.kirilyuk.model.Student;
-import org.iase24.nikolay.kirilyuk.model.Teacher;
-import org.iase24.nikolay.kirilyuk.util.DataBaseConnection;
-import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
+import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Course;
+import org.iase24.nikolay.kirilyuk.entity.Teacher;
+import org.iase24.nikolay.kirilyuk.util.HibernateUtil;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseDaoImpl implements CourseDao {
 
-    private static final String GET_ALL_COURSES = "SELECT * FROM course";
-    private static final String GET_COURSE_BY_ID = "SELECT * FROM course WHERE id = ?";
-    private static final String ADD_NEW_COURSE = "INSERT INTO course (name) VALUES (?)";
-    private static final String DELETE_COURSE = "DELETE FROM course WHERE id = ?";
-    private static final String UPDATE_COURSE = "UPDATE course SET name = ? WHERE id = ?";
-    private static final String ADD_TEACHER_IN_COURSE = "update course set teacher_id = ? where id = ?";
-    private static final String GET_STUDENT_BY_COURSE_ID =
-            "SELECT s.id, s.name, s.status FROM student s " +
-                    "join students_courses sc on s.id = sc.student_id " +
-                    "where sc.course_id = ?";
-    private static final String GET_TEACHER_BY_TEACHER_ID =
-            "SELECT t.id, t.name, t.status FROM teacher t " +
-                    "join course c on t.id = c.teacher_id " +
-                    "where c.id = ?";
+    @Override
+    @SuppressWarnings("uncheked")
+    public List<CourseDataDTO> getAllCourse() {
+        List<CourseDataDTO> coursesDataDTOs = null;
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            List<Course> courses = session.createQuery("from Course").list();
+            coursesDataDTOs = courses.stream()
+                    .map(course -> new CourseDataDTO(course.getId(), course.getName()))
+                    .collect(Collectors.toList());
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return coursesDataDTOs;
+    }
 
     @Override
-    public List<Course> getAllCourse() {
-        List<Course> courses = new ArrayList<>();
-
-        try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_ALL_COURSES);
-                ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Course course = new Course();
-                course.setId(resultSet.getLong("id"));
-                course.setName(resultSet.getString("name"));
-                courses.add(course);
+    public Course getCourseById(Long id) {
+        Transaction transaction = null;
+        Course courses = new Course();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            courses = session.createQuery(
+                            "SELECT c FROM Course c LEFT JOIN FETCH c.students " +
+                                    "LEFT JOIN FETCH c.teachers" +
+                                    " WHERE c.id = :id"
+                            , Course.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            e.printStackTrace();
         }
         return courses;
     }
 
     @Override
-    public Course getCourseById(Long id) {
-        Course course = null;
-        try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_COURSE_BY_ID)
-        ) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Long courseId = resultSet.getLong("id");
-                String name = resultSet.getString("name");
-                List<Student> students = getStudentByCourseId(courseId);
-                Teacher teacher = getTeacherByTeacherId(courseId);
-
-                course = new Course(courseId, name, students, teacher);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return course;
-    }
-
-    @Override
     public void addCourse(Course course) {
+        Transaction transaction = null;
         try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(
-                        ADD_NEW_COURSE, Statement.RETURN_GENERATED_KEYS)
+                Session session = HibernateUtil.getSessionFactory().openSession()
         ) {
-            statement.setString(1, course.getName());
-            statement.executeUpdate();
-            try (ResultSet generateKey = statement.getGeneratedKeys()) {
-                if (generateKey.next()) {
-                    course.setId(generateKey.getLong(1));
-                } else {
-                    throw new SQLException("Creating course failed, no ID obtained.");
-                }
+            transaction = session.beginTransaction();
+            session.save(course);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
     public void deleteCourse(Long id) {
+        Transaction transaction = null;
         try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(DELETE_COURSE)
+                Session session = HibernateUtil.getSessionFactory().openSession()
         ) {
-            if (id != null) {
-                statement.setLong(1, id);
-            } else {
-                throw new SQLException("Deleting course failed, no ID obtained.");
+            session.beginTransaction();
+            session.delete(getCourseById(id));
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-            statement.executeUpdate();
-        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void updateCourse(Course course, Long id) {
+        Transaction transaction = null;
         try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(UPDATE_COURSE)
+                Session session = HibernateUtil.getSessionFactory().openSession()
         ) {
-            statement.setString(1, course.getName());
-            if (id != null) {
-                statement.setLong(2, id);
-            } else {
-                throw new SQLException("Updating course failed, no ID obtained.");
+            session.beginTransaction();
+            Course existingCourse = getCourseById(id);
+            if (existingCourse != null) {
+                existingCourse.setName(course.getName());
+                session.update(existingCourse);
             }
-            statement.executeUpdate();
-        } catch (SQLException e) {
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
         }
     }
 
     @Override
-    public void addTeacherInCourse(Long courseId, Integer teacherId) {
+    public void addTeacherToCourse(Long courseId, Long teacherId) {
+        Transaction transaction = null;
         try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(ADD_TEACHER_IN_COURSE)
+                Session session = HibernateUtil.getSessionFactory().openSession()
         ) {
-            statement.setLong(1, courseId);
-            statement.setInt(2, teacherId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+            session.beginTransaction();
+            Course course = session.get(Course.class, courseId);
+            Teacher teacher = session.get(Teacher.class, teacherId);
 
-    private Teacher getTeacherByTeacherId(Long courseId) {
-        Teacher teacher = null;
-        try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_TEACHER_BY_TEACHER_ID)
-        ) {
-            statement.setLong(1, courseId);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Long teacherId = resultSet.getLong("id");
-                String name = resultSet.getString("name");
-                StatusUser status = StatusUser.valueOf(resultSet.getString("status"));
-                List<Student> students = getStudentByCourseId(courseId);
-                teacher = new Teacher(teacherId, name, status, null, students);
+            if (course != null && teacher != null) {
+                course.getTeachers().add(teacher);
+                session.saveOrUpdate(course);
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return teacher;
-    }
-
-    private List<Student> getStudentByCourseId(Long courseId) {
-        List<Student> students = new ArrayList<>();
-        try (
-                Connection connection = DataBaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_STUDENT_BY_COURSE_ID)
-        ) {
-
-            statement.setLong(1, courseId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Long studentId = resultSet.getLong("id");
-                String name = resultSet.getString("name");
-                StatusUser status = StatusUser.valueOf(resultSet.getString("status"));
-
-                students.add(new Student(studentId, name, status, null, null));
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return students;
     }
 }

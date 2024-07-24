@@ -3,7 +3,8 @@ package org.iase24.nikolay.kirilyuk.servlet;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.CourseDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.CourseDaoImpl;
-import org.iase24.nikolay.kirilyuk.model.Course;
+import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.util.HttpResponseUtil;
 
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @WebServlet("/api/courses")
 public class CourseServlet extends HttpServlet {
-
+    private static final long serialVersionUID = 1L;
     private final CourseDao courseDao;
     private final HttpResponseUtil responseUtil;
 
@@ -44,20 +45,34 @@ public class CourseServlet extends HttpServlet {
                 responseUtil.httpResponse(resp, "Invalid ID format");
             }
         } else {
-            List<Course> courses = courseDao.getAllCourse();
+            List<CourseDataDTO> courses = courseDao.getAllCourse();
             responseUtil.httpResponse(resp, courses);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BufferedReader reader = req.getReader();
-        Gson gson = new Gson();
-        Course course = gson.fromJson(reader, Course.class);
+        String courseIdParam = req.getParameter("courseId");
+        String teacherIdParam = req.getParameter("teacherId");
 
-        courseDao.addCourse(course);
-        resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-        responseUtil.httpResponse(resp, course);
+        if (courseIdParam != null && teacherIdParam != null) {
+            try {
+                Long courseId = Long.parseLong(courseIdParam);
+                Long studentId = Long.parseLong(teacherIdParam);
+
+                courseDao.addTeacherToCourse(studentId, courseId);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid studentId or courseId format.");
+            }
+        } else {
+            BufferedReader reader = req.getReader();
+            Gson gson = new Gson();
+            Course course = gson.fromJson(reader, Course.class);
+            courseDao.addCourse(course);
+            responseUtil.httpResponse(resp, course);
+        }
     }
 
     @Override
@@ -74,7 +89,7 @@ public class CourseServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idParam = req.getParameter("id");
         Long courseId = Long.parseLong(req.getParameter("courseId"));
-        int teacherId = Integer.parseInt(req.getParameter("teacherId"));
+        Long teacherId = Long.parseLong(req.getParameter("teacherId"));
         if (idParam != null) {
             Long id = Long.parseLong(idParam);
             BufferedReader reader = req.getReader();
@@ -85,7 +100,7 @@ public class CourseServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_ACCEPTED);
             responseUtil.httpResponse(resp, course);
         } else {
-            courseDao.addTeacherInCourse(courseId, teacherId);
+            courseDao.addTeacherToCourse(courseId, teacherId);
         }
     }
 }

@@ -1,18 +1,14 @@
-package org.iase24.nikolay.kirilyuk.model;
+package org.iase24.nikolay.kirilyuk.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Course {
+public class CourseDataDTO {
 
     private Long id;
     private String name;
-    private List<Student> students;
-    private Teacher teacher;
 }

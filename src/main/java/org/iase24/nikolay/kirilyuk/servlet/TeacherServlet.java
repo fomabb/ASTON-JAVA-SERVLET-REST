@@ -3,7 +3,8 @@ package org.iase24.nikolay.kirilyuk.servlet;
 import com.google.gson.Gson;
 import org.iase24.nikolay.kirilyuk.dao.TeacherDao;
 import org.iase24.nikolay.kirilyuk.dao.impl.TeacherDaoImpl;
-import org.iase24.nikolay.kirilyuk.model.Teacher;
+import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Teacher;
 import org.iase24.nikolay.kirilyuk.util.HttpResponseUtil;
 
 import javax.servlet.ServletException;
@@ -46,7 +47,7 @@ public class TeacherServlet extends HttpServlet {
                 responseUtil.httpResponse(resp, "Invalid ID format");
             }
         } else {
-            List<Teacher> teachers = teacherDao.getAllTeachers();
+            List<TeacherDataDTO> teachers = teacherDao.getAllTeachers();
             responseUtil.httpResponse(resp, teachers);
         }
     }
