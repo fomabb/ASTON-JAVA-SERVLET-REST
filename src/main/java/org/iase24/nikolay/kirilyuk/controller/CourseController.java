@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/course/")
+@RequestMapping("/api/course")
 @RequiredArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
 
-    @GetMapping
+    @GetMapping("/test")
     public String hello() {
-        return "hello";
+        return "<h1>J9 SDELAL ETO NAKONEC! CONFIG IS EXIST</h1>";
     }
 
     @GetMapping
@@ -27,7 +27,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public Optional<CourseDataDTO> getCourseById(@PathVariable("id") Long id) {
+    public CourseDataDTO getCourseById(@PathVariable("id") Long id) {
         return courseService.getCourseById(id);
     }
 

@@ -1,21 +1,22 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.*;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "course")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Course extends BaseEntity {
+@Builder
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -23,7 +24,6 @@ public class Course extends BaseEntity {
     @ManyToMany(mappedBy = "courses")
     private List<Student> students;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Teacher> teachers;
 }

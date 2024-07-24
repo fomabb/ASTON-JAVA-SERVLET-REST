@@ -5,11 +5,11 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
 
-    <listener>
-        <listener-class>org.iase24.nikolay.kirilyuk.listener.HibernateApplicationListener</listener-class>
-    </listener>
+<!--    <listener>-->
+<!--        <listener-class>org.iase24.nikolay.kirilyuk.listener.HibernateApplicationListener</listener-class>-->
+<!--    </listener>-->
 
-    <listener>
-        <listener-class>org.iase24.nikolay.kirilyuk.listener.FlywayListener</listener-class>
-    </listener>
+<!--    <listener>-->
+<!--        <listener-class>org.iase24.nikolay.kirilyuk.listener.FlywayListener</listener-class>-->
+<!--    </listener>-->
 </web-app>

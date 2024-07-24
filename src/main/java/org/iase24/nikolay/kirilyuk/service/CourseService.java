@@ -12,7 +12,7 @@ public interface CourseService {
 
     List<CourseDataDTO> getAllCourse();
 
-    Optional<CourseDataDTO> getCourseById(Long id);
+    CourseDataDTO getCourseById(Long id);
 
     void addCourse(Course course);
 

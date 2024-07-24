@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.entity.Teacher;
+import org.iase24.nikolay.kirilyuk.mapper.CourseMapper;
 import org.iase24.nikolay.kirilyuk.repository.CourseRepository;
 import org.iase24.nikolay.kirilyuk.repository.TeacherRepository;
 import org.iase24.nikolay.kirilyuk.service.CourseService;
@@ -19,6 +20,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
+    private final CourseMapper courseMapper;
 
     @Override
     public List<CourseDataDTO> getAllCourse() {
@@ -28,10 +30,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Optional<CourseDataDTO> getCourseById(Long id) {
-        return Optional.ofNullable(courseRepository.findById(id)
-                .map(course -> new CourseDataDTO(course.getId(), course.getName()))
-                .orElseThrow(() -> new IllegalArgumentException("Course with id %s id not found".formatted(id))));
+    public CourseDataDTO getCourseById(Long id) {
+        return courseRepository.findById(id)
+                .map(courseMapper::map)
+                .orElseThrow(() -> new IllegalArgumentException("Course with id %s id not found".formatted(id)));
     }
 
     @Override
