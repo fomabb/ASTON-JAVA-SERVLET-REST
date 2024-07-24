@@ -1,11 +1,12 @@
-package org.iase24.nikolay.kirilyuk.dao;
+package org.iase24.nikolay.kirilyuk.service;
 
 import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Student;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface StudentDao {
+public interface StudentService {
 
     List<StudentDataDTO> getAllStudent();
 
@@ -13,7 +14,7 @@ public interface StudentDao {
 
     void deleteStudent(Long id);
 
-    Student getStudentById(Long id);
+    Optional<Student> getStudentById(Long id);
 
     void addStudentToCourse(Long studentId, Long courseId);
 }

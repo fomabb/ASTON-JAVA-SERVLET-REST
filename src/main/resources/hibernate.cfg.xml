@@ -22,7 +22,6 @@
     <property name="format_sql">true</property>
     <mapping class="org.iase24.nikolay.kirilyuk.entity.Course"/>
     <mapping class="org.iase24.nikolay.kirilyuk.entity.Student"/>
-<!--    <mapping class="org.iase24.nikolay.kirilyuk.entity.StudentsCourses"/>-->
     <mapping class="org.iase24.nikolay.kirilyuk.entity.Teacher"/>
 
     <!-- DB schema will be updated if needed -->
