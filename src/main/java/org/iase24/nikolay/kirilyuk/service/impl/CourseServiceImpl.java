@@ -1,14 +1,17 @@
 package org.iase24.nikolay.kirilyuk.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
+import org.iase24.nikolay.kirilyuk.dto.*;
 import org.iase24.nikolay.kirilyuk.entity.Course;
+import org.iase24.nikolay.kirilyuk.entity.Student;
 import org.iase24.nikolay.kirilyuk.entity.Teacher;
 import org.iase24.nikolay.kirilyuk.mapper.CourseMapper;
 import org.iase24.nikolay.kirilyuk.repository.CourseRepository;
+import org.iase24.nikolay.kirilyuk.repository.StudentRepository;
 import org.iase24.nikolay.kirilyuk.repository.TeacherRepository;
 import org.iase24.nikolay.kirilyuk.service.CourseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +19,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
     private final CourseMapper courseMapper;
+    private final StudentRepository studentRepository;
 
     @Override
     public List<CourseDataDTO> getAllCourse() {
@@ -37,6 +42,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void addCourse(Course course) {
         courseRepository.save(course);
     }
@@ -47,6 +53,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void updateCourse(Long id, CourseDataDTO courseDataDTO) {
         Optional<Course> courseId = courseRepository.findById(id);
         if (courseId.isPresent()) {
@@ -57,13 +64,44 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void addTeacherToCourse(Long courseId, Long teacherId) {
-        Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-        Optional<Course> course = courseRepository.findById(courseId);
+        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
+        Course course = courseRepository.findById(courseId).orElseThrow();
+        teacher.setCourse(course);
+        teacherRepository.save(teacher);
+    }
 
-        if (teacher.isPresent() && course.isPresent()) {
-            course.get().getTeachers().add(teacher.get());
-            courseRepository.save(course.get());
+    @Override
+    @Transactional
+    public CourseWithTeachersDataDTO getCourseByIdWithTeachers(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+        List<Teacher> teachers = courseRepository.findByTeachersByCourseId(courseId);
+
+        List<TeacherWithStudentsDataDTO> teacherDataDTOs = teachers.stream()
+                .map(teacher -> {
+                    List<StudentDataDTO> studentDTOs = teacher.getStudents()
+                            .stream()
+                            .map(student -> new StudentDataDTO(student.getId(), student.getName(), student.getStatus()))
+                            .collect(Collectors.toList());
+                    return new TeacherWithStudentsDataDTO(teacher.getId(), teacher.getName(), teacher.getStatus(), studentDTOs);
+                }).collect(Collectors.toList());
+
+        return new CourseWithTeachersDataDTO(course.getId(), course.getName(), teacherDataDTOs);
+    }
+
+    @Override
+    @Transactional
+    public void deleteStudentFromTeacher(Long teacherId, Long studentId) {
+        Teacher course = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+        if (course.getStudents().contains(student)) {
+            student.setTeacher(null);
+            studentRepository.save(student);
         }
     }
 }
