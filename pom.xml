@@ -13,7 +13,6 @@
         <spring.version>4.1.1.RELEASE</spring.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <packaging>war</packaging>
 
         <spring.version>5.3.25</spring.version>
         <jpa.version>2.7.4</jpa.version>
