@@ -1,10 +1,7 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class Teacher {
 
     @Id

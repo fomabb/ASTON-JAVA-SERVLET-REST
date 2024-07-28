@@ -7,7 +7,7 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{JpaConfig.class, SwaggerConfig.class};
+        return new Class[]{JpaConfig.class, SpringFoxConfig.class};
     }
 
     @Override
