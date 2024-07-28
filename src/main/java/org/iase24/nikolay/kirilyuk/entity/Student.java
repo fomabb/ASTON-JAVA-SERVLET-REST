@@ -1,8 +1,8 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Student {
 
     @Id

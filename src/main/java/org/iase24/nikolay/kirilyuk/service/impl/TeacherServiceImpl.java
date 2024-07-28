@@ -27,6 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void addTeacher(Teacher teacher) {
         teacherRepository.save(teacher);
@@ -39,6 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .orElseThrow(() -> new IllegalArgumentException("Teacher with id %s id not found".formatted(id)));
     }
 
+    @Transactional
     @Override
     public void deleteTeacherById(Long id) {
         teacherRepository.deleteById(id);
