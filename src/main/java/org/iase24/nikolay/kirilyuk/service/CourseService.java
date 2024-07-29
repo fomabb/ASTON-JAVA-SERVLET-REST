@@ -1,6 +1,7 @@
 package org.iase24.nikolay.kirilyuk.service;
 
 import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
+import org.iase24.nikolay.kirilyuk.dto.CourseWithStudentsDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.CourseWithTeachersDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,11 @@ public interface CourseService {
 
     void addTeacherToCourse(Long courseId, Long teacherId);
 
+    void addStudentToTeacher(Long studentId, Long teacherId);
+
     CourseWithTeachersDataDTO getCourseByIdWithTeachers(Long courseId);
+
+    CourseWithStudentsDataDTO getAllStudentByCourseId(Long courseId);
 
     void deleteStudentFromTeacher(Long teacherId, Long studentId);
 }

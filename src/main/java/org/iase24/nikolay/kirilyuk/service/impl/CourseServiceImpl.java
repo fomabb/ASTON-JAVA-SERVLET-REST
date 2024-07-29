@@ -6,6 +6,7 @@ import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.entity.Student;
 import org.iase24.nikolay.kirilyuk.entity.Teacher;
 import org.iase24.nikolay.kirilyuk.mapper.CourseMapper;
+import org.iase24.nikolay.kirilyuk.mapper.StudentMapper;
 import org.iase24.nikolay.kirilyuk.repository.CourseRepository;
 import org.iase24.nikolay.kirilyuk.repository.StudentRepository;
 import org.iase24.nikolay.kirilyuk.repository.TeacherRepository;
@@ -26,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherRepository teacherRepository;
     private final CourseMapper courseMapper;
     private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
     @Override
     public List<CourseDataDTO> getAllCourse() {
@@ -74,6 +76,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
+    public void addStudentToTeacher(Long studentId, Long teacherId) {
+        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        student.setTeacher(teacher);
+        studentRepository.save(student);
+    }
+
+    @Override
     public CourseWithTeachersDataDTO getCourseByIdWithTeachers(Long courseId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found"));
@@ -89,6 +99,18 @@ public class CourseServiceImpl implements CourseService {
                 }).collect(Collectors.toList());
 
         return new CourseWithTeachersDataDTO(course.getId(), course.getName(), teacherDataDTOs);
+    }
+
+    @Override
+    public CourseWithStudentsDataDTO getAllStudentByCourseId(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+
+        List<StudentDataDTO> studentDataDTOs = studentRepository.findStudentByCourseId(courseId).stream()
+                .map(studentMapper::map)
+                .collect(Collectors.toList());
+
+        return new CourseWithStudentsDataDTO(course.getId(), course.getName(), studentDataDTOs);
     }
 
     @Override

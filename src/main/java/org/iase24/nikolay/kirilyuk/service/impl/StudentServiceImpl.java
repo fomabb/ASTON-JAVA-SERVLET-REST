@@ -8,6 +8,7 @@ import org.iase24.nikolay.kirilyuk.mapper.StudentMapper;
 import org.iase24.nikolay.kirilyuk.repository.CourseRepository;
 import org.iase24.nikolay.kirilyuk.repository.StudentRepository;
 import org.iase24.nikolay.kirilyuk.service.StudentService;
+import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +35,13 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public void addStudent(Student student) {
+        student.setStatus(StatusUser.STUDENT);
         studentRepository.save(student);
     }
 
     @Override
     public void deleteStudent(Long id) {
+
         studentRepository.deleteById(id);
     }
 
@@ -49,9 +52,18 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() -> new IllegalArgumentException("Student with id %s id not found".formatted(id)));
     }
 
+    @Transactional
     @Override
     public void addStudentToCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);
         Course course = courseRepository.findById(courseId).orElse(null);
+
+        if (student != null || course != null) {
+            assert student != null;
+            student.getCourses().add(course);
+            studentRepository.save(student);
+        } else {
+            throw new IllegalArgumentException("Student with id %s id not found".formatted(studentId));
+        }
     }
 }

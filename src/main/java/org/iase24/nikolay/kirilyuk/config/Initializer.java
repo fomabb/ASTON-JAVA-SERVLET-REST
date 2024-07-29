@@ -1,5 +1,6 @@
 package org.iase24.nikolay.kirilyuk.config;
 
+import org.iase24.nikolay.kirilyuk.listener.FlywayListener;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {

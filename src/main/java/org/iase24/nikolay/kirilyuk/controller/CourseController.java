@@ -1,7 +1,11 @@
 package org.iase24.nikolay.kirilyuk.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
+import org.iase24.nikolay.kirilyuk.dto.CourseWithStudentsDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.CourseWithTeachersDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.service.CourseService;
@@ -12,35 +16,82 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/course")
 @RequiredArgsConstructor
-//@Tag(name = "Course Controller", description = "API for managing courses")
+@Tag(name = "Архив курсов", description = "Получение результатов для проверки работоспособности")
 public class CourseController {
 
     private final CourseService courseService;
 
-    @GetMapping("/test")
-    public String hello() {
-        return "<h1>J9 SDELAL ETO NAKONEC! CONFIG IS EXIST</h1>";
-    }
-
-//    @Operation(summary = "Get all courses")
+    @Operation(
+            description = "Получить список всех курсов",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @GetMapping
     public List<CourseDataDTO> getAllCourse() {
         return courseService.getAllCourse();
     }
 
-//    @Operation(summary = "Get course by ID")
+    @Operation(
+            description = "Получить курс по ID",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @GetMapping("/{id}")
     public CourseDataDTO getCourseById(@PathVariable("id") Long id) {
         return courseService.getCourseById(id);
     }
 
-//    @Operation(summary = "Add a new course")
+    @Operation(
+            description = "Создать новый курс",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @PostMapping
     public void addCourse(@RequestBody Course course) {
         courseService.addCourse(course);
     }
 
-//    @Operation(summary = "Add teacher to course")
+    @Operation(
+            description = "Добавить учителя на курс",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @PutMapping("/courseId/{courseId}/teacherId/{teacherId}")
     public void addTeacherToCourse(
             @PathVariable("courseId") Long courseId,
@@ -49,30 +100,123 @@ public class CourseController {
         courseService.addTeacherToCourse(courseId, teacherId);
     }
 
-//    @Operation(summary = "Update name course by course ID")
+    @Operation(
+            description = "Добавить ученика к учителю по ID студента и учителя",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
+    @PutMapping("/studentId/{studentId}/to/teacherId/{teacherId}")
+    public void addStudentToTeacher(
+            @PathVariable("studentId") Long studentId,
+            @PathVariable("teacherId") Long teacherId
+    ) {
+        courseService.addStudentToTeacher(studentId, teacherId);
+    }
+
+    @Operation(
+            description = "Обновть название курса",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @PutMapping("/{id}")
     public void updateCourse(@PathVariable("id") Long id, @RequestBody CourseDataDTO courseDataDTO) {
         courseService.updateCourse(id, courseDataDTO);
     }
 
-//    @Operation(summary = "Delete course by ID")
+    @Operation(
+            description = "Удалить курс по ID",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @DeleteMapping("/{id}")
     public void deleteCourseById(@PathVariable("id") Long id) {
         courseService.deleteCourseById(id);
     }
 
-//    @Operation(summary = "Get course with teachers by course ID")
-    @GetMapping("/teachers/{courseId}")
+    @Operation(
+            description = "Вывести всю информацию о курсе по его ID",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
+    @GetMapping("/{courseId}/teachers")
     public CourseWithTeachersDataDTO courseByIdWithTeachers(@PathVariable("courseId") Long courseId) {
         return courseService.getCourseByIdWithTeachers(courseId);
     }
 
-//    @Operation(summary = "Remove a student from a teacher")
+    @Operation(
+            description = "Убрать ученика из группы конкретного учителя по их ID",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
     @PutMapping("/delete-from-teacherId/{teacherId}/studentId/{studentId}")
     public void removeStudentFromTeacher(
             @PathVariable("teacherId") Long teacherId,
             @PathVariable("studentId") Long studentId
     ) {
         courseService.deleteStudentFromTeacher(teacherId, studentId);
+    }
+
+    @Operation(
+            description = "Показать курс по ID со всеми студентами",
+            summary = "Сводная информация endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid",
+                            responseCode = "500"
+                    )
+            }
+    )
+    @GetMapping("/{courseId}/with-students")
+    public CourseWithStudentsDataDTO getAllStudentByCourseId(@PathVariable("courseId") Long courseId) {
+        return courseService.getAllStudentByCourseId(courseId);
     }
 }
