@@ -1,8 +1,8 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)

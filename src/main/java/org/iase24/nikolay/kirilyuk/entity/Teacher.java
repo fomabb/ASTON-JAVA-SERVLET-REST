@@ -3,7 +3,7 @@ package org.iase24.nikolay.kirilyuk.entity;
 import lombok.*;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)

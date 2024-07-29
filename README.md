@@ -2,8 +2,7 @@
 
 # RESTful Web-application is written using the following technologies:
 
-- Spring
-- Hibernate
+- SpringBoot
 - FlyWay
 - PostgresSQL DB
 
@@ -290,6 +289,10 @@ ___GET: get all students___
   }
 ]
 ```
+
+___Swagger___
+
+![swagger.png](src%2Fmain%2Fresources%2Fimg%2Fswagger.png)
 
 ### My application requests in Postman
 
