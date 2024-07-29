@@ -1,25 +1,18 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-//@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "course")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Course {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Course extends BaseEntity {
 
     @Column(name = "name")
     private String name;

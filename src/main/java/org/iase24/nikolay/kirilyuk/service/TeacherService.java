@@ -1,6 +1,7 @@
 package org.iase24.nikolay.kirilyuk.service;
 
 import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
+import org.iase24.nikolay.kirilyuk.dto.TeacherWithStudentsDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Teacher;
 
 import java.util.List;
@@ -12,7 +13,9 @@ public interface TeacherService {
 
     void addTeacher(Teacher teacher);
 
-    Optional<Teacher> getTeacherById(Long id);
+    TeacherDataDTO getTeacherById(Long id);
 
     void deleteTeacherById(Long id);
+
+    TeacherWithStudentsDataDTO getTeacherWithStudents(Long id);
 }

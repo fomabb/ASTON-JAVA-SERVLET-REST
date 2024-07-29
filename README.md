@@ -1,8 +1,8 @@
-# ASTON-HIBERNATE-SERVLET-REST
+# ASTON-SPRING-HIBERNATE-REST
 
 # RESTful Web-application is written using the following technologies:
 
-- Servlet API
+- Spring
 - Hibernate
 - FlyWay
 - PostgresSQL DB
@@ -26,236 +26,157 @@
 
 **1. API Description of general methods for Course**
 
-| METHOD | PATH                                                            | DESCRIPTION                |
-|--------|-----------------------------------------------------------------|----------------------------|
-| POST   | /api/courses                                                    | create new course          |
-| POST   | /api/students/courses?idStudent={studentId}&idCourse={courseId} | add student in course      |
-| PUT    | /api/courses?id={courseId}                                      | update name course         |
-| PUT    | /api/courses?courseId={courseId}&teacherId={teacherId}          | add teacher in course      |
-| GET    | /api/courses                                                    | get all courses            |
-| GET    | /api/course?id={id}                                             | get course by id           |
-| DELETE | /api/courses?id={id}                                            | delete course by id        |
-| DELETE | /api/students/courses?idStudent={studentId}&idCourse={courseId} | delete student from course |
+| METHOD | PATH                                                                | DESCRIPTION                    |
+|--------|---------------------------------------------------------------------|--------------------------------|
+| POST   | /api/courses                                                        | create new course              |
+| POST   | /api/student/add/studentId/{studentId}/to/courseId/{courseId}       | add student to course          |
+| PUT    | /api/courses?id={courseId}                                          | add teacher to course          |
+| PUT    | /api/course/studentId/{studentId}/to/teacherId/{teacherId}          | add student to teacher         |
+| PUT    | /api/course/delete-from-teacherId/{teacherId}/studentId/{studentId} | delete student from teacher    |
+| PUT    | /api/course/{id}                                                    | update course name             |
+| GET    | /api/course                                                         | get all courses                |
+| GET    | /api/course/{id}                                                    | get course by ID               |
+| GET    | /api/course/{courseId}/with-students                                | get course by id with students |
+| GET    | /api/course/{courseId}/teachers                                     | get course by id with teachers |
+| DELETE | /api/course/{id}                                                    | delete course by id            |
 
-___POST: Request body for method create new student___
+___POST: Request body for method create new course___
 
 ```json
 {
-  "name": "IT-Overone"
+  "name": "Aston"
 }
 ```
 
 ```json
 {
   "id": 1,
-  "name": "IT-Overone"
+  "name": "Aston"
 }
 ```
 
-___GET: course by id___
+___GET: get course by id with teachers___
 
 ```json
 {
-    "id": 1,
-    "name": "IT-Overone",
-    "students": [
+  "id": 1,
+  "name": "Aston",
+  "teachers": [
+    {
+      "id": 2,
+      "name": "Vladimir",
+      "status": "TEACHER",
+      "students": [
         {
-            "id": 1,
-            "name": "Bob",
-            "status": "STUDENT"
+          "id": 3,
+          "name": "Max",
+          "status": "STUDENT"
         },
         {
-            "id": 2,
-            "name": "Bill",
-            "status": "STUDENT"
+          "id": 4,
+          "name": "Piter",
+          "status": "STUDENT"
         },
         {
-            "id": 3,
-            "name": "Maks",
-            "status": "STUDENT"
+          "id": 8,
+          "name": "Alina",
+          "status": "STUDENT"
         },
         {
-            "id": 4,
-            "name": "Alex",
-            "status": "STUDENT"
-        },
-        {
-            "id": 5,
-            "name": "Andrey",
-            "status": "STUDENT"
-        },
-        {
-            "id": 6,
-            "name": "Alina",
-            "status": "STUDENT"
-        },
-        {
-            "id": 7,
-            "name": "Victoria",
-            "status": "STUDENT"
-        },
-        {
-            "id": 8,
-            "name": "Mary",
-            "status": "STUDENT"
-        },
-        {
-            "id": 9,
-            "name": "Nazar",
-            "status": "STUDENT"
-        },
-        {
-            "id": 10,
-            "name": "Mark",
-            "status": "STUDENT"
+          "id": 9,
+          "name": "Veronika",
+          "status": "STUDENT"
         }
-    ],
-    "teacher": {
-        "id": 1,
-        "name": "Dmitriy Palchunsry",
-        "status": "TEACHER",
-        "students": [
-            {
-                "id": 1,
-                "name": "Bob",
-                "status": "STUDENT"
-            },
-            {
-                "id": 2,
-                "name": "Bill",
-                "status": "STUDENT"
-            },
-            {
-                "id": 3,
-                "name": "Maks",
-                "status": "STUDENT"
-            },
-            {
-                "id": 4,
-                "name": "Alex",
-                "status": "STUDENT"
-            },
-            {
-                "id": 5,
-                "name": "Andrey",
-                "status": "STUDENT"
-            },
-            {
-                "id": 6,
-                "name": "Alina",
-                "status": "STUDENT"
-            },
-            {
-                "id": 7,
-                "name": "Victoria",
-                "status": "STUDENT"
-            },
-            {
-                "id": 8,
-                "name": "Mary",
-                "status": "STUDENT"
-            },
-            {
-                "id": 9,
-                "name": "Nazar",
-                "status": "STUDENT"
-            },
-            {
-                "id": 10,
-                "name": "Mark",
-                "status": "STUDENT"
-            }
-        ]
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Pavel",
+      "status": "TEACHER",
+      "students": [
+        {
+          "id": 5,
+          "name": "Jek",
+          "status": "STUDENT"
+        },
+        {
+          "id": 6,
+          "name": "Jhon",
+          "status": "STUDENT"
+        },
+        {
+          "id": 7,
+          "name": "Olga",
+          "status": "STUDENT"
+        }
+      ]
     }
+  ]
+}
+```
+
+___GET: get all student by course id___
+
+```json
+{
+  "id": 1,
+  "name": "Aston",
+  "students": [
+    {
+      "id": 3,
+      "name": "Max",
+      "status": "STUDENT"
+    },
+    {
+      "id": 4,
+      "name": "Piter",
+      "status": "STUDENT"
+    },
+    {
+      "id": 5,
+      "name": "Jek",
+      "status": "STUDENT"
+    },
+    {
+      "id": 6,
+      "name": "Jhon",
+      "status": "STUDENT"
+    },
+    {
+      "id": 7,
+      "name": "Olga",
+      "status": "STUDENT"
+    },
+    {
+      "id": 8,
+      "name": "Alina",
+      "status": "STUDENT"
+    },
+    {
+      "id": 9,
+      "name": "Veronika",
+      "status": "STUDENT"
+    }
+  ]
 }
 ```
 
 **2. API Description of general methods for Teacher**
 
-| METHOD | PATH                  | DESCRIPTION          |
-|--------|-----------------------|----------------------|
-| POST   | /api/teachers         | create new teacher   |
-| GET    | /api/teachers         | get all teachers     |
-| GET    | /api/teachers?id={id} | get teacher by id    |
-| DELETE | /api/courses?id={id}  | delete teacher by id |
+| METHOD | PATH                            | DESCRIPTION                     |
+|--------|---------------------------------|---------------------------------|
+| POST   | /api/teacher                    | create new teacher              |
+| GET    | /api/teacher                    | get all teachers                |
+| GET    | /api/teachers/{id}              | get teacher by id               |
+| GET    | /api/teacher/{id}/with-students | get teacher by id with students |
+| DELETE | /api/course/{id}                | delete teacher by id            |
 
 
-___GET: get teacher by id___
-
-```json
-{
-    "id": 1,
-    "name": "Dmitriy Palchinsky",
-    "status": "TEACHER",
-    "students": [
-        {
-            "id": 1,
-            "name": "Bob",
-            "status": "STUDENT"
-        },
-        {
-            "id": 2,
-            "name": "Bill",
-            "status": "STUDENT"
-        },
-        {
-            "id": 3,
-            "name": "Maks",
-            "status": "STUDENT"
-        },
-        {
-            "id": 4,
-            "name": "Alex",
-            "status": "STUDENT"
-        },
-        {
-            "id": 5,
-            "name": "Andrey",
-            "status": "STUDENT"
-        },
-        {
-            "id": 6,
-            "name": "Alina",
-            "status": "STUDENT"
-        },
-        {
-            "id": 7,
-            "name": "Victoria",
-            "status": "STUDENT"
-        },
-        {
-            "id": 8,
-            "name": "Mary",
-            "status": "STUDENT"
-        },
-        {
-            "id": 9,
-            "name": "Nazar",
-            "status": "STUDENT"
-        },
-        {
-            "id": 10,
-            "name": "Mark",
-            "status": "STUDENT"
-        }
-    ]
-}
-```
-
-**3. API Description of general methods for Student**
-
-| METHOD | PATH                  | DESCRIPTION          |
-|--------|-----------------------|----------------------|
-| POST   | /api/students         | create new student   |
-| GET    | /api/students         | get all students     |
-| GET    | /api/students?id={id} | get student by id    |
-| DELETE | /api/students?id={id} | delete student by id |
-
-___POST: Request body for method create new student___
+___POST: Request body for method create new teacher___
 
 ```json
 {
-  "name": "Mark"
+  "name": "Vladimir"
 }
 ```
 
@@ -263,8 +184,67 @@ ___Response___
 
 ```json
 {
-  "id": 10,
-  "name": "Mark",
+  "id": 2,
+  "name": "Vladimir",
+  "status": "TEACHER"
+}
+```
+
+___GET: get teacher by id with students___
+
+```json
+{
+  "id": 2,
+  "name": "Vladimir",
+  "status": "TEACHER",
+  "students": [
+    {
+      "id": 3,
+      "name": "Max",
+      "status": "STUDENT"
+    },
+    {
+      "id": 4,
+      "name": "Piter",
+      "status": "STUDENT"
+    },
+    {
+      "id": 8,
+      "name": "Alina",
+      "status": "STUDENT"
+    },
+    {
+      "id": 9,
+      "name": "Veronika",
+      "status": "STUDENT"
+    }
+  ]
+}
+```
+
+**3. API Description of general methods for Student**
+
+| METHOD | PATH               | DESCRIPTION          |
+|--------|--------------------|----------------------|
+| POST   | /api/student       | create new student   |
+| GET    | /api/student       | get all students     |
+| GET    | /api/student/{id}  | get student by id    |
+| DELETE | /api/students/{id} | delete student by id |
+
+___POST: Request body for method create new student___
+
+```json
+{
+  "name": "Max"
+}
+```
+
+___Response___
+
+```json
+{
+  "id": 3,
+  "name": "Max",
   "status": "STUDENT"
 }
 ```
@@ -274,53 +254,38 @@ ___GET: get all students___
 ```json
 [
   {
-    "id": 1,
-    "name": "Bob",
-    "status": "STUDENT"
-  },
-  {
-    "id": 2,
-    "name": "Bill",
-    "status": "STUDENT"
-  },
-  {
     "id": 3,
-    "name": "Maks",
+    "name": "Max",
     "status": "STUDENT"
   },
   {
     "id": 4,
-    "name": "Alex",
+    "name": "Piter",
     "status": "STUDENT"
   },
   {
     "id": 5,
-    "name": "Andrey",
+    "name": "Jek",
     "status": "STUDENT"
   },
   {
     "id": 6,
-    "name": "Alina",
+    "name": "Jhon",
     "status": "STUDENT"
   },
   {
     "id": 7,
-    "name": "Victoria",
+    "name": "Olga",
     "status": "STUDENT"
   },
   {
     "id": 8,
-    "name": "Mary",
+    "name": "Alina",
     "status": "STUDENT"
   },
   {
     "id": 9,
-    "name": "Nazar",
-    "status": "STUDENT"
-  },
-  {
-    "id": 10,
-    "name": "Mark",
+    "name": "Veronika",
     "status": "STUDENT"
   }
 ]

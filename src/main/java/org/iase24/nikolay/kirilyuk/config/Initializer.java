@@ -1,5 +1,6 @@
 package org.iase24.nikolay.kirilyuk.config;
 
+import org.iase24.nikolay.kirilyuk.listener.FlywayListener;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -7,7 +8,7 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{JpaConfig.class};
+        return new Class[]{JpaConfig.class, SpringFoxConfig.class};
     }
 
     @Override
