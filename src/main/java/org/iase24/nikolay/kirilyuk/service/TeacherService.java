@@ -3,10 +3,11 @@ package org.iase24.nikolay.kirilyuk.service;
 import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.TeacherWithStudentsDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Teacher;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
+@Repository
 public interface TeacherService {
 
     List<TeacherDataDTO> getAllTeachers();

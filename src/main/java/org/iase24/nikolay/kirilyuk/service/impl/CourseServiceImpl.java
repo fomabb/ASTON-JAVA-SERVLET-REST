@@ -1,6 +1,7 @@
 package org.iase24.nikolay.kirilyuk.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.iase24.nikolay.kirilyuk.controller.exception.CourseNotFoundException;
 import org.iase24.nikolay.kirilyuk.dto.*;
 import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.entity.Student;
@@ -37,16 +38,21 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDataDTO getCourseById(Long id) {
-        return courseRepository.findById(id)
-                .map(courseMapper::map)
-                .orElseThrow(() -> new IllegalArgumentException("Course with id %s id not found".formatted(id)));
+    public CourseDataDTO getCourseById(Long id) throws CourseNotFoundException {
+        Optional<CourseDataDTO> courseDataDTO = courseRepository.findById(id)
+                .map(courseMapper::map);
+
+        if (courseDataDTO.isEmpty()) {
+            throw new CourseNotFoundException("Course with id %s id not found".formatted(id));
+        }
+        return courseDataDTO.get();
     }
 
     @Override
     @Transactional
-    public void addCourse(Course course) {
+    public Course addCourse(Course course) {
         courseRepository.save(course);
+        return course;
     }
 
     @Override

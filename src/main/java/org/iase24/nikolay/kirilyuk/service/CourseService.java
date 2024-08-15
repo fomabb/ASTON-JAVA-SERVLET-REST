@@ -1,5 +1,6 @@
 package org.iase24.nikolay.kirilyuk.service;
 
+import org.iase24.nikolay.kirilyuk.controller.exception.CourseNotFoundException;
 import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.CourseWithStudentsDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.CourseWithTeachersDataDTO;
@@ -13,9 +14,9 @@ public interface CourseService {
 
     List<CourseDataDTO> getAllCourse();
 
-    CourseDataDTO getCourseById(Long id);
+    CourseDataDTO getCourseById(Long id) throws CourseNotFoundException;
 
-    void addCourse(Course course);
+    Course addCourse(Course course);
 
     void deleteCourseById(Long id);
 

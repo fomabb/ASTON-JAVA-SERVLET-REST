@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.iase24.nikolay.kirilyuk.controller.exception.CourseNotFoundException;
 import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.CourseWithStudentsDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.CourseWithTeachersDataDTO;
@@ -13,6 +14,7 @@ import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.model.out.ErrorRestOut;
 import org.iase24.nikolay.kirilyuk.service.CourseService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +55,7 @@ public class CourseController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @GetMapping("/{id}")
-    public CourseDataDTO getCourseById(@PathVariable("id") Long id) {
+    public CourseDataDTO getCourseById(@PathVariable("id") Long id) throws CourseNotFoundException {
         return courseService.getCourseById(id);
     }
 
@@ -68,8 +70,10 @@ public class CourseController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PostMapping
-    public void addCourse(@RequestBody Course course) {
-        courseService.addCourse(course);
+    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
+        Course createdCourse = courseService.addCourse(course);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCourse);
     }
 
     @ResponseStatus(HttpStatus.OK)

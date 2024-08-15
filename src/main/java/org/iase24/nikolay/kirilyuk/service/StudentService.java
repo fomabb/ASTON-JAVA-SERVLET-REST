@@ -2,10 +2,11 @@ package org.iase24.nikolay.kirilyuk.service;
 
 import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Student;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
+@Repository
 public interface StudentService {
 
     List<StudentDataDTO> getAllStudent();
