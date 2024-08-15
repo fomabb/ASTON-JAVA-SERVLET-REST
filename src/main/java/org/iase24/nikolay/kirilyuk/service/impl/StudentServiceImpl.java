@@ -34,9 +34,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     @Override
-    public void addStudent(Student student) {
-        student.setStatus(StatusUser.STUDENT);
-        studentRepository.save(student);
+    public void addStudent(List<Student> students) {
+        students.forEach(student -> student.setStatus(StatusUser.STUDENT));
+        studentRepository.saveAll(students);
     }
 
     @Override

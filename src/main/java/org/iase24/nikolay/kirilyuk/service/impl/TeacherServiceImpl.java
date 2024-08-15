@@ -36,9 +36,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Transactional
     @Override
-    public void addTeacher(Teacher teacher) {
-        teacher.setStatus(StatusUser.TEACHER);
-        teacherRepository.save(teacher);
+    public void addTeacher(List<Teacher> teachers) {
+        teachers.forEach(teacher -> teacher.setStatus(StatusUser.TEACHER));
+        teacherRepository.saveAllAndFlush(teachers);
     }
 
     @Override

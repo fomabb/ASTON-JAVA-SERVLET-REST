@@ -11,7 +11,7 @@ public interface TeacherService {
 
     List<TeacherDataDTO> getAllTeachers();
 
-    void addTeacher(Teacher teacher);
+    void addTeacher(List<Teacher> teachers);
 
     TeacherDataDTO getTeacherById(Long id);
 

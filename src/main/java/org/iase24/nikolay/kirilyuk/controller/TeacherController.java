@@ -68,8 +68,8 @@ public class TeacherController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PostMapping
-    public void addTeacher(@RequestBody Teacher teacher) {
-        teacherService.addTeacher(teacher);
+    public void addTeacher(@RequestBody List<Teacher> teachers) {
+        teacherService.addTeacher(teachers);
     }
 
     @ResponseStatus(HttpStatus.OK)

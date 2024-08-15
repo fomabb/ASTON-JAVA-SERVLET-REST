@@ -71,8 +71,8 @@ public class StudentController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PostMapping
-    public void addStudent(@RequestBody Student student) {
-        studentService.addStudent(student);
+    public void addStudent(@RequestBody List<Student> students) {
+        studentService.addStudent(students);
     }
 
     @ResponseStatus(HttpStatus.OK)
