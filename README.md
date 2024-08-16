@@ -12,7 +12,7 @@
 
 ### Prerequisites:
 
-- Java 19
+- Java 17
 - PostgresSQL
 
 # Data model

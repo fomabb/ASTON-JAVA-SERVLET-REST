@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.TeacherWithStudentsDataDTO;
@@ -13,6 +14,7 @@ import org.iase24.nikolay.kirilyuk.model.out.ErrorRestOut;
 import org.iase24.nikolay.kirilyuk.service.TeacherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -53,7 +55,12 @@ public class TeacherController {
     )
     @GetMapping("/{id}")
     public TeacherDataDTO getTeacher(@PathVariable("id") Long id) {
-        return teacherService.getTeacherById(id);
+
+        try {
+            return teacherService.getTeacherById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
