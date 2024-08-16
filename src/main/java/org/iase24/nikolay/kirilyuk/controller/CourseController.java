@@ -136,7 +136,7 @@ public class CourseController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PutMapping("/{id}")
-    public void updateCourse(@PathVariable("id") Long id, @RequestBody CourseDataDTO courseDataDTO) {
+    public void updateCourse(@PathVariable("id") Long id, @RequestBody CourseDataDTO courseDataDTO) throws CourseNotFoundException {
         courseService.updateCourse(id, courseDataDTO);
     }
 

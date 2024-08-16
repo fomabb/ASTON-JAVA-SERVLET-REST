@@ -2,6 +2,7 @@ package org.iase24.nikolay.kirilyuk.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

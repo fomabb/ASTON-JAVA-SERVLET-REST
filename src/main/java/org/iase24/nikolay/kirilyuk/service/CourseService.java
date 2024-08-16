@@ -20,7 +20,7 @@ public interface CourseService {
 
     void deleteCourseById(Long id);
 
-    void updateCourse(Long id, CourseDataDTO courseDataDTO);
+    void updateCourse(Long id, CourseDataDTO courseDataDTO) throws CourseNotFoundException;
 
     void addTeacherToCourse(Long courseId, Long teacherId);
 

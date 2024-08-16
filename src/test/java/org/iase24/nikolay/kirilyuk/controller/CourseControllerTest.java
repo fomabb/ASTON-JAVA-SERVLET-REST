@@ -70,7 +70,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    void updateCourse_ValidData_ReturnsNoContent() throws Exception {
+    void updateCourse_ValidData_ReturnsNoContent() throws Exception, CourseNotFoundException {
         Long id = 1L;
         CourseDataDTO courseDataDTO = new CourseDataDTO();
         courseDataDTO.setName("Update course name");
@@ -168,7 +168,7 @@ public class CourseControllerTest {
         when(courseService.getAllStudentByCourseId(courseId)).thenThrow(new RuntimeException("Course not found"));
 
         mockMvc.perform(get("/api/course/{courseId}/with-students", courseId)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 

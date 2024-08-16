@@ -77,20 +77,24 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void updateCourse(Long id, CourseDataDTO courseDataDTO) {
+    public void updateCourse(Long id, CourseDataDTO courseDataDTO) throws CourseNotFoundException {
         Optional<Course> courseId = courseRepository.findById(id);
         if (courseId.isPresent()) {
             Course course = courseId.get();
             course.setName(courseDataDTO.getName());
             courseRepository.save(course);
+        } else {
+            throw new CourseNotFoundException("course with id %s id not found".formatted(id));
         }
     }
 
     @Override
     @Transactional
     public void addTeacherToCourse(Long courseId, Long teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
-        Course course = courseRepository.findById(courseId).orElseThrow();
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
         teacher.setCourse(course);
         teacherRepository.save(teacher);
     }
@@ -98,16 +102,22 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void addStudentToTeacher(Long studentId, Long teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
-        Student student = studentRepository.findById(studentId).orElseThrow();
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher with id %s not found"
+                        .formatted(teacherId)));
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student with id %s not found"
+                        .formatted(studentId)));
+
         student.setTeacher(teacher);
         studentRepository.save(student);
+        teacherRepository.save(teacher);
     }
 
     @Override
     public CourseWithTeachersDataDTO getCourseByIdWithTeachers(Long courseId) {
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
         List<Teacher> teachers = courseRepository.findByTeachersByCourseId(courseId);
 
         List<TeacherWithStudentsDataDTO> teacherDataDTOs = teachers.stream()
@@ -125,7 +135,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseWithStudentsDataDTO getAllStudentByCourseId(Long courseId) {
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
 
         List<StudentDataDTO> studentDataDTOs = studentRepository.findStudentByCourseId(courseId).stream()
                 .map(studentMapper::map)
@@ -137,12 +147,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void deleteStudentFromTeacher(Long teacherId, Long studentId) {
-        Teacher course = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
 
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-        if (course.getStudents().contains(student)) {
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        if (teacher.getStudents().contains(student)) {
             student.setTeacher(null);
             studentRepository.save(student);
         }
