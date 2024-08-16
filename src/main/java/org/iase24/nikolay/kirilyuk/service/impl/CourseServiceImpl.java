@@ -1,5 +1,6 @@
 package org.iase24.nikolay.kirilyuk.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.controller.exception.CourseNotFoundException;
 import org.iase24.nikolay.kirilyuk.dto.*;
@@ -56,8 +57,22 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void deleteCourseById(Long id) {
-        courseRepository.deleteById(id);
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+
+        // Убираем связь студентов с учителем
+        course.getStudents().forEach(student -> student.setTeacher(null));
+
+        // Убираем связь учителей курсом
+        course.getTeachers().forEach(teacher -> teacher.setCourse(null));
+
+        // Очищаем студентов в курсе
+        course.getStudents().clear();
+
+        // Удаляем уже пустой курс по его ID
+        courseRepository.delete(course);
     }
 
     @Override

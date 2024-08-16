@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.controller.exception.CourseNotFoundException;
 import org.iase24.nikolay.kirilyuk.dto.CourseDataDTO;
@@ -16,6 +17,7 @@ import org.iase24.nikolay.kirilyuk.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -92,7 +94,11 @@ public class CourseController {
             @PathVariable("courseId") Long courseId,
             @PathVariable("teacherId") Long teacherId
     ) {
-        courseService.addTeacherToCourse(courseId, teacherId);
+        try {
+            courseService.addTeacherToCourse(courseId, teacherId);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -111,7 +117,11 @@ public class CourseController {
             @PathVariable("studentId") Long studentId,
             @PathVariable("teacherId") Long teacherId
     ) {
-        courseService.addStudentToTeacher(studentId, teacherId);
+        try {
+            courseService.addStudentToTeacher(studentId, teacherId);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -143,7 +153,11 @@ public class CourseController {
     )
     @DeleteMapping("/{id}")
     public void deleteCourseById(@PathVariable("id") Long id) {
-        courseService.deleteCourseById(id);
+        try {
+            courseService.deleteCourseById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -159,7 +173,11 @@ public class CourseController {
     )
     @GetMapping("/{courseId}/teachers")
     public CourseWithTeachersDataDTO courseByIdWithTeachers(@PathVariable("courseId") Long courseId) {
-        return courseService.getCourseByIdWithTeachers(courseId);
+        try {
+            return courseService.getCourseByIdWithTeachers(courseId);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -194,6 +212,11 @@ public class CourseController {
     )
     @GetMapping("/{courseId}/with-students")
     public CourseWithStudentsDataDTO getAllStudentByCourseId(@PathVariable("courseId") Long courseId) {
-        return courseService.getAllStudentByCourseId(courseId);
+
+        try {
+            return courseService.getAllStudentByCourseId(courseId);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }

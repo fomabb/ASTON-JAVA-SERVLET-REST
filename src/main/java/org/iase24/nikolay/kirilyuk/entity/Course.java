@@ -20,6 +20,9 @@ public class Course extends BaseEntity {
     @ManyToMany(mappedBy = "courses")
     private List<Student> students;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     private List<Teacher> teachers;
 }
