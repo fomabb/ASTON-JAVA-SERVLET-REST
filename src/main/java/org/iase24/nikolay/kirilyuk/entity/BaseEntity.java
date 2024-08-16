@@ -2,11 +2,14 @@ package org.iase24.nikolay.kirilyuk.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "base_entity")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

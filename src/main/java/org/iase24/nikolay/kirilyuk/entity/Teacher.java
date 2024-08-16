@@ -1,14 +1,9 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
+import jakarta.persistence.*;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class Teacher extends BaseEntity {
 
     @Column(name = "name")
@@ -26,12 +22,13 @@ public class Teacher extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StatusUser status;
 
-    @JsonBackReference("teacher-student")
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Student> students;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
+    )
     @JoinColumn(name = "course_id")
     private Course course;
 }

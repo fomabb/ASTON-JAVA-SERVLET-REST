@@ -1,0 +1,4 @@
+CREATE TABLE base_entity
+(
+    id BIGINT NOT NULL PRIMARY KEY
+);

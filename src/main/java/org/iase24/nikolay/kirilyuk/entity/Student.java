@@ -1,11 +1,7 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
 import java.util.List;
@@ -16,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Student extends BaseEntity {
 
     @Column(name = "name")
@@ -27,7 +24,6 @@ public class Student extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
-    @JsonBackReference("teacher-student")
     private Teacher teacher;
 
     @ManyToMany(fetch = FetchType.LAZY)

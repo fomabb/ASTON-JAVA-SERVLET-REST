@@ -1,18 +1,17 @@
 package org.iase24.nikolay.kirilyuk.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
+
+import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class TeacherDataDTO {
+@AllArgsConstructor
+public class CourseWithTeachersDataDTO {
 
     private Long id;
     private String name;
-    private StatusUser status;
+    private List<TeacherWithStudentsDataDTO> teachers;
 }

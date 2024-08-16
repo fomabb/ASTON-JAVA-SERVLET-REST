@@ -1,11 +1,7 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,6 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Course extends BaseEntity {
 
     @Column(name = "name")
@@ -23,7 +20,9 @@ public class Course extends BaseEntity {
     @ManyToMany(mappedBy = "courses")
     private List<Student> students;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
     private List<Teacher> teachers;
 }
