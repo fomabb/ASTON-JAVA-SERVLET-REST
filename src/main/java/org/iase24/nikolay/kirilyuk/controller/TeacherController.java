@@ -13,6 +13,7 @@ import org.iase24.nikolay.kirilyuk.entity.Teacher;
 import org.iase24.nikolay.kirilyuk.model.out.ErrorRestOut;
 import org.iase24.nikolay.kirilyuk.service.TeacherService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -75,8 +76,9 @@ public class TeacherController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PostMapping
-    public void addTeacher(@RequestBody List<Teacher> teachers) {
+    public ResponseEntity<List<Teacher>> addTeacher(@RequestBody List<Teacher> teachers) {
         teacherService.addTeacher(teachers);
+        return ResponseEntity.ok(teachers);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -92,7 +94,11 @@ public class TeacherController {
     )
     @DeleteMapping("/{id}")
     public void deleteTeacher(@PathVariable("id") Long id) {
-        teacherService.deleteTeacherById(id);
+        try {
+            teacherService.deleteTeacherById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)

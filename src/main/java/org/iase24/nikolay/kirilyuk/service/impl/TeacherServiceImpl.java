@@ -37,9 +37,10 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Transactional
     @Override
-    public void addTeacher(List<Teacher> teachers) {
+    public List<Teacher> addTeacher(List<Teacher> teachers) {
         teachers.forEach(teacher -> teacher.setStatus(StatusUser.TEACHER));
         teacherRepository.saveAllAndFlush(teachers);
+        return teachers;
     }
 
     @Override
@@ -52,7 +53,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional
     @Override
     public void deleteTeacherById(Long id) {
-        teacherRepository.deleteById(id);
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher with id %s id not found"
+                        .formatted(id)));
+
+        teacher.getStudents().forEach(student -> student.setTeacher(null));
+        teacher.setCourse(null);
+
+        teacherRepository.delete(teacher);
     }
 
     @Override
