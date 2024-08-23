@@ -20,7 +20,7 @@ public class FlyWayConfig {
                 .dataSource(dataSource)
                 .baselineOnMigrate(true)
                 .locations("classpath:db/migration")
-                .schemas("postgres")
+                .schemas("public")
                 .load();
     }
 }
