@@ -1,5 +1,6 @@
 package org.iase24.nikolay.kirilyuk.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
 import org.iase24.nikolay.kirilyuk.dto.TeacherDataDTO;
@@ -36,28 +37,36 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Transactional
     @Override
-    public void addTeacher(List<Teacher> teachers) {
+    public List<Teacher> addTeacher(List<Teacher> teachers) {
         teachers.forEach(teacher -> teacher.setStatus(StatusUser.TEACHER));
         teacherRepository.saveAllAndFlush(teachers);
+        return teachers;
     }
 
     @Override
     public TeacherDataDTO getTeacherById(Long id) {
         return teacherRepository.findById(id)
                 .map(teacherMapper::map)
-                .orElseThrow(() -> new IllegalArgumentException("Teacher with id %s id not found".formatted(id)));
+                .orElseThrow(() -> new EntityNotFoundException("Teacher with id %s id not found".formatted(id)));
     }
 
     @Transactional
     @Override
     public void deleteTeacherById(Long id) {
-        teacherRepository.deleteById(id);
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher with id %s id not found"
+                        .formatted(id)));
+
+        teacher.getStudents().forEach(student -> student.setTeacher(null));
+        teacher.setCourse(null);
+
+        teacherRepository.delete(teacher);
     }
 
     @Override
     public TeacherWithStudentsDataDTO getTeacherWithStudents(Long id) {
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Teacher with id %s id not found".formatted(id)));
+                .orElseThrow(() -> new EntityNotFoundException("Teacher with id %s id not found".formatted(id)));
 
         List<StudentDataDTO> studentDataDTOs = studentRepository.findStudentByTeacherId(id).stream()
                 .map(studentMapper::map)

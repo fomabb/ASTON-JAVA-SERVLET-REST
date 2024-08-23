@@ -23,6 +23,19 @@
 
 ## RESTful API
 
+# /api/test/check-index
+
+___Response EXPLAIN ANALYZE___
+
+```json
+[
+  "Index Scan using user_test_index_login_key on user_test_index  (cost=0.43..8.45 rows=1 width=45) (actual time=0.056..0.056 rows=0 loops=1)",
+  "  Index Cond: ((login)::text = 'Zeke_243740%'::text)",
+  "Planning Time: 3.050 ms",
+  "Execution Time: 0.079 ms"
+]
+```
+
 **1. API Description of general methods for Course**
 
 | METHOD | PATH                                                                | DESCRIPTION                    |

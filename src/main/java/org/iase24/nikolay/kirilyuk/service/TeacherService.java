@@ -12,7 +12,7 @@ public interface TeacherService {
 
     List<TeacherDataDTO> getAllTeachers();
 
-    void addTeacher(List<Teacher> teachers);
+    List<Teacher> addTeacher(List<Teacher> teachers);
 
     TeacherDataDTO getTeacherById(Long id);
 

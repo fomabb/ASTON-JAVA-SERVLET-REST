@@ -5,13 +5,17 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
+import org.iase24.nikolay.kirilyuk.entity.Course;
 import org.iase24.nikolay.kirilyuk.entity.Student;
 import org.iase24.nikolay.kirilyuk.model.out.ErrorRestOut;
 import org.iase24.nikolay.kirilyuk.service.StudentService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -56,7 +60,11 @@ public class StudentController {
     )
     @GetMapping("/{id}")
     public StudentDataDTO findStudentById(@PathVariable("id") Long id) {
-        return studentService.getStudentById(id);
+        try {
+            return studentService.getStudentById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -71,8 +79,9 @@ public class StudentController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PostMapping
-    public void addStudent(@RequestBody List<Student> students) {
+    public ResponseEntity<List<Student>> addStudent(@RequestBody List<Student> students) {
         studentService.addStudent(students);
+        return ResponseEntity.ok(students);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -88,7 +97,11 @@ public class StudentController {
     )
     @DeleteMapping("/{id}")
     public void deleteStudentById(@PathVariable("id") Long id) {
-        studentService.deleteStudent(id);
+        try {
+            studentService.deleteStudent(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -103,7 +116,10 @@ public class StudentController {
             content = @Content(schema = @Schema(implementation = ErrorRestOut.class))
     )
     @PostMapping("/add/studentId/{studentId}/to/courseId/{courseId}")
-    public void addStudentToCourse(@PathVariable("studentId") Long studentId, @PathVariable("courseId") Long courseId) {
-        studentService.addStudentToCourse(studentId, courseId);
+    public ResponseEntity<Course> addStudentToCourse(@PathVariable("studentId") Long studentId, @PathVariable("courseId") Long courseId) {
+
+       Course course = studentService.addStudentToCourse(studentId, courseId);
+
+       return ResponseEntity.ok(course);
     }
 }

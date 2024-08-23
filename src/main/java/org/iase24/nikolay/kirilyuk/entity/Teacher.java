@@ -1,9 +1,9 @@
 package org.iase24.nikolay.kirilyuk.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import org.iase24.nikolay.kirilyuk.util.enumirate.StatusUser;
 
-import jakarta.persistence.*;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -22,12 +22,13 @@ public class Teacher extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StatusUser status;
 
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "teacher",
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private List<Student> students;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
-    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
     )
     @JoinColumn(name = "course_id")
     private Course course;

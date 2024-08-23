@@ -1,5 +1,6 @@
 package org.iase24.nikolay.kirilyuk.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.iase24.nikolay.kirilyuk.dto.StudentDataDTO;
 import org.iase24.nikolay.kirilyuk.entity.Course;
@@ -40,9 +41,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public void deleteStudent(Long id) {
 
-        studentRepository.deleteById(id);
+        Student student = studentRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+
+        student.setTeacher(null);
+        student.getCourses().forEach(course -> course.getStudents().remove(student));
+
+        studentRepository.delete(student);
     }
 
     @Override
@@ -54,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     @Override
-    public void addStudentToCourse(Long studentId, Long courseId) {
+    public Course addStudentToCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);
         Course course = courseRepository.findById(courseId).orElse(null);
 
@@ -65,5 +73,6 @@ public class StudentServiceImpl implements StudentService {
         } else {
             throw new IllegalArgumentException("Student with id %s id not found".formatted(studentId));
         }
+        return course;
     }
 }

@@ -13,7 +13,7 @@
         <setting name="validation-enabled" value="true" />
         <datasource-mapping>
           <factory-entry name="Home-work-servlet" value="0cec700e-6f9b-44bf-b891-a4c0f144d19c" />
-          <factory-entry name="entityManagerFactory" value="0cec700e-6f9b-44bf-b891-a4c0f144d19c" />
+          <factory-entry name="entityManagerFactory" value="3a7f337f-f473-4b28-aed2-29a37f5f6346" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
