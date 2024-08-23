@@ -28,7 +28,7 @@ public class TestUserServiceImpl implements TestUserService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private static final int BATCH_SIZE = 100_000;
+    private static final int BATCH_SIZE = 1_000;
 
     @Override
     @Transactional
@@ -38,7 +38,7 @@ public class TestUserServiceImpl implements TestUserService {
         List<String> randomNames = loginBuilder.createRandomData();
 
 
-        for (long i = 0; i < 3_000_000; i++) {
+        for (int i = 0; i < 3_000_000; i++) {
             UserTest userTest = new UserTest();
             userTest.setLogin(randomNames.get(random.nextInt(randomNames.size())) + "_" + i);
             userTest.setEmail(users.get(0).getEmail() + "_" + i);
