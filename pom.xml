@@ -12,9 +12,11 @@
 
     <groupId>io.Nikolay.Kirilyuk</groupId>
     <artifactId>Home-work-servlet</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Home-work-org.iase24.nikolay.kirilyuk.servlet Maven Webapp</name>
+    <prerequisites>
+    </prerequisites>
     <url>http://maven.apache.org</url>
 
     <dependencies>
