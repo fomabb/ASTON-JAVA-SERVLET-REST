@@ -303,7 +303,13 @@ ___GET: get all students___
 ]
 ```
 
+___DOCKER FILE___
+
+[docker-compose.yaml](docker-compose.yaml) - download
+
 ___Swagger___
+
+http://localhost:8080/swagger-ui/index.html#/ - open ui swagger
 
 ![swagger.png](src%2Fmain%2Fresources%2Fimg%2Fswagger.png)
 
